@@ -598,7 +598,7 @@ namespace flxSharp.flxSharp
         /// </summary>
         public static void resetState()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
             /*
             _game._requestedState = new (FlxU.getClass(FlxU.getClassName(_game._state,false)))();
