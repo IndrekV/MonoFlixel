@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// This is the basic game "state" object - e.g. in a simple game

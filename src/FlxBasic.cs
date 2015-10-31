@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// This is a useful "generic" Flixel object.

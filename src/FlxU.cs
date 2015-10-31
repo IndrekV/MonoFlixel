@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// General purpose helper functions.

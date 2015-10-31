@@ -9,10 +9,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using flxSharp.flxSharp;
-using flxSharp.flxSharp.System;
+using SharpFlixel;
 
-namespace fliXNA_xbox
+namespace SharpFlixel
 {
     public class FlxTileblock : FlxSprite
     {

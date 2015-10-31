@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// The camera class is used to display the game's visuals in the Flash player.

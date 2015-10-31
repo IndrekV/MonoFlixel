@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// Stores a rectangle.

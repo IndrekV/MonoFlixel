@@ -1,9 +1,8 @@
-﻿using fliXNA_xbox;
-using flxSharp.flxSharp.System;
+﻿using SharpFlixel;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// This is the base class for most of the display objects (<code>FlxSprite</code>, <code>FlxText</code>, etc).

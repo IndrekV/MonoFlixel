@@ -1,5 +1,4 @@
-﻿using fliXNA_xbox;
-using flxSharp.flxSharp.System;
+﻿using SharpFlixel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// This is a global helper class full of useful functions for audio,

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace flxSharp.flxSharp.System
+namespace SharpFlixel
 {
     public class FlxGameRunner : Game
     {

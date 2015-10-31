@@ -1,10 +1,9 @@
-﻿using flxSharp.flxSharp;
-using flxSharp.flxSharp.System;
+﻿using SharpFlixel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace fliXNA_xbox
+namespace SharpFlixel
 {
     public class FlxText : FlxSprite
     {

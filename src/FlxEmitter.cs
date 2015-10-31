@@ -1,8 +1,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using fliXNA_xbox;
+using SharpFlixel;
 
-namespace flxSharp.flxSharp
+namespace SharpFlixel
 {
     /// <summary>
     /// <code>FlxEmitter</code> is a lightweight particle emitter.
