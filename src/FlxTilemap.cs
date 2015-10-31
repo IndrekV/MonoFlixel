@@ -73,13 +73,62 @@ namespace fliXNA_xbox
             ID = 3;
         }
 
-        public FlxTilemap loadMap(String CSVdataFile, Texture2D Graphic, int TileWidth, int TileHeight, int DrawIndex = 0, int CollideIndex = 1)
+		/**
+	 * Converts a one-dimensional array of tile data to a comma-separated
+	 * string.
+	 * 
+	 * @param Data An array full of integer tile references.
+	 * @param Width The number of tiles in each row.
+	 * @param Invert Recommended only for 1-bit arrays - changes 0s to 1s and
+	 *        vice versa.
+	 * 
+	 * @return A comma-separated string containing the level data in a
+	 *         <code>FlxTilemap</code>-friendly format.
+	 */
+		static public String arrayToCSV(int[] Data, int Width, bool Invert = false)
+		{
+			int row = 0;
+			int column;
+			StringBuilder csv = new StringBuilder();
+			int Height = Data.Length / Width;
+			int index;
+			while(row < Height)
+			{
+				column = 0;
+				while(column < Width)
+				{
+					index = (int)Data.GetValue(row * Width + column);
+					if(Invert)
+					{
+						if(index == 0)
+							index = 1;
+						else if(index == 1)
+							index = 0;
+					}
+
+					if(column == 0)
+					{
+						if(row == 0)
+							csv.Append(index);
+						else
+							csv.Append("\n" + index);
+					}
+					else
+						csv.Append(", " + index);
+					column++;
+				}
+				row++;
+			}
+			return csv.ToString();
+		}
+
+        public FlxTilemap loadMap(String CSVdataFile, String Graphic, int TileWidth, int TileHeight, uint DrawIndex = 0, int CollideIndex = 1)
         {
             collideIndex = CollideIndex;
             //_tileWidth = _tileHeight = tileSize = TileSize;
 
-            StreamReader stream = new StreamReader(TitleContainer.OpenStream(CSVdataFile));
-            CSVdataFile = stream.ReadToEnd();
+            //StreamReader stream = new StreamReader(TitleContainer.OpenStream(CSVdataFile));
+            //CSVdataFile = stream.ReadToEnd();
 
             String[] columns;
             String[] rows = new String[] { };
@@ -107,7 +156,7 @@ namespace fliXNA_xbox
 
             totalTiles = heightInTiles * widthInTiles;
 
-            tileGraphic = _tiles = Graphic;
+			tileGraphic = _tiles = FlxS.ContentManager.Load<Texture2D>(Graphic);
             _tileWidth = TileWidth;
             if (_tileWidth == 0)
                 _tileWidth = _tiles.Height;
