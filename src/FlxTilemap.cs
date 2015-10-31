@@ -88,41 +88,36 @@ namespace SharpFlixel
 	 * @return A comma-separated string containing the level data in a
 	 *         <code>FlxTilemap</code>-friendly format.
 	 */
-		static public String arrayToCSV(int[] Data, int Width, bool Invert = false)
+		static public String arrayToCSV (int[] Data, int Width, bool Invert = false)
 		{
 			int row = 0;
 			int column;
-			StringBuilder csv = new StringBuilder();
+			StringBuilder csv = new StringBuilder ();
 			int Height = Data.Length / Width;
 			int index;
-			while(row < Height)
-			{
+			while (row < Height) {
 				column = 0;
-				while(column < Width)
-				{
-					index = (int)Data.GetValue(row * Width + column);
-					if(Invert)
-					{
-						if(index == 0)
+				while (column < Width) {
+					index = (int)Data.GetValue (row * Width + column);
+					if (Invert) {
+						if (index == 0)
 							index = 1;
-						else if(index == 1)
+						else if (index == 1)
 							index = 0;
 					}
 
-					if(column == 0)
-					{
-						if(row == 0)
-							csv.Append(index);
+					if (column == 0) {
+						if (row == 0)
+							csv.Append (index);
 						else
-							csv.Append("\n" + index);
-					}
-					else
-						csv.Append(", " + index);
+							csv.Append ("\n" + index);
+					} else
+						csv.Append (", " + index);
 					column++;
 				}
 				row++;
 			}
-			return csv.ToString();
+			return csv.ToString ();
 		}
 
         public FlxTilemap loadMap(String CSVdataFile, String Graphic, int TileWidth, int TileHeight, uint DrawIndex = 0, int CollideIndex = 1)

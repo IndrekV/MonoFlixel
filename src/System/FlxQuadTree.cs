@@ -27,11 +27,11 @@ namespace SharpFlixel
  * 
  */
 
-	/**
+		/**
 	* Flag for specifying that you want to add an object to the A list.
 		*/
 		public const uint A_LIST = 0;
-	/**
+		/**
    * Flag for specifying that you want to add an object to the B list.
    */
 		public const uint B_LIST = 1;
@@ -247,9 +247,9 @@ namespace SharpFlixel
 		/**
 		* Has to be public for GWT reflection.
 			*/
-			public FlxQuadTree(float X, float Y, float Width, float Height, FlxQuadTree Parent = null)
+		public FlxQuadTree (float X, float Y, float Width, float Height, FlxQuadTree Parent = null)
 		{
-			init(X, Y, Width, Height, Parent);
+			init (X, Y, Width, Height, Parent);
 		}
 
 		/**
@@ -261,50 +261,42 @@ namespace SharpFlixel
    * @param Height Desired height of this node.
    * @param Parent The parent branch or node. Pass null to create a root.
    */
-		protected void init(float X, float Y, float Width, float Height, FlxQuadTree Parent)
+		protected void init (float X, float Y, float Width, float Height, FlxQuadTree Parent)
 		{
-			make(X, Y, Width, Height);
-			_headA = _tailA = new FlxList();
-			_headB = _tailB = new FlxList();
+			make (X, Y, Width, Height);
+			_headA = _tailA = new FlxList ();
+			_headB = _tailB = new FlxList ();
 
 			// Copy the parent's children (if there are any)
-			if(Parent != null)
-			{
+			if (Parent != null) {
 				FlxList iterator;
 				FlxList ot;
-				if(Parent._headA.Object != null)
-				{
+				if (Parent._headA.Object != null) {
 					iterator = Parent._headA;
-					while(iterator != null)
-					{
-						if(_tailA.Object != null)
-						{
+					while (iterator != null) {
+						if (_tailA.Object != null) {
 							ot = _tailA;
-							_tailA = new FlxList();
+							_tailA = new FlxList ();
 							ot.next = _tailA;
 						}
 						_tailA.Object = iterator.Object;
 						iterator = iterator.next;
 					}
 				}
-				if(Parent._headB.Object != null)
-				{
+				if (Parent._headB.Object != null) {
 					iterator = Parent._headB;
-					while(iterator != null)
-					{
-						if(_tailB.Object != null)
-						{
+					while (iterator != null) {
+						if (_tailB.Object != null) {
 							ot = _tailB;
-							_tailB = new FlxList();
+							_tailB = new FlxList ();
 							ot.next = _tailB;
 						}
 						_tailB.Object = iterator.Object;
 						iterator = iterator.next;
 					}
 				}
-			}
-			else
-				_min = (int) ((Width + Height) / (2 * divisions));
+			} else
+				_min = (int)((Width + Height) / (2 * divisions));
 			_canSubdivide = (Width > _min) || (Height > _min);
 
 			// Set up comparison/sort helpers
@@ -330,40 +322,40 @@ namespace SharpFlixel
    * @param Width Desired width of this node.
    * @param Height Desired height of this node.
    */
-		protected void init(float X, float Y, float Width, float Height)
+		protected void init (float X, float Y, float Width, float Height)
 		{
-			init(X, Y, Width, Height, null);
+			init (X, Y, Width, Height, null);
 		}
 
 		/**
    * Clean up memory.
    */
-		public void destroy()
+		public void destroy ()
 		{
-			if(_headA != null)
-				_headA.destroy();
+			if (_headA != null)
+				_headA.destroy ();
 			_headA = null;
 			// if(_tailA != null)
 			// _tailA.destroy();
 			_tailA = null;
-			if(_headB != null)
-				_headB.destroy();
+			if (_headB != null)
+				_headB.destroy ();
 			_headB = null;
 			// if(_tailB != null)
 			// _tailB.destroy();
 			_tailB = null;
 
-			if(_northWestTree != null)
-				_northWestTree.destroy();
+			if (_northWestTree != null)
+				_northWestTree.destroy ();
 			_northWestTree = null;
-			if(_northEastTree != null)
-				_northEastTree.destroy();
+			if (_northEastTree != null)
+				_northEastTree.destroy ();
 			_northEastTree = null;
-			if(_southEastTree != null)
-				_southEastTree.destroy();
+			if (_southEastTree != null)
+				_southEastTree.destroy ();
 			_southEastTree = null;
-			if(_southWestTree != null)
-				_southWestTree.destroy();
+			if (_southWestTree != null)
+				_southWestTree.destroy ();
 			_southWestTree = null;
 
 			_object = null;
@@ -393,15 +385,13 @@ namespace SharpFlixel
    *        space. The NotifyCallback is only called if this function returns
    *        true. See FlxObject.separate().
    */
-		public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, Func<FlxObject, FlxObject, Boolean> NotifyCallback = null, Func<FlxObject, FlxObject, Boolean> ProcessCallback = null)
+		public void load (FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, Func<FlxObject, FlxObject, Boolean> NotifyCallback = null, Func<FlxObject, FlxObject, Boolean> ProcessCallback = null)
 		{
-			add(ObjectOrGroup1, A_LIST);
-			if(ObjectOrGroup2 != null)
-			{
-				add(ObjectOrGroup2, B_LIST);
+			add (ObjectOrGroup1, A_LIST);
+			if (ObjectOrGroup2 != null) {
+				add (ObjectOrGroup2, B_LIST);
 				_useBothLists = true;
-			}
-			else
+			} else
 				_useBothLists = false;
 			_notifyCallback = NotifyCallback;
 			_processingCallback = ProcessCallback;
@@ -422,9 +412,9 @@ namespace SharpFlixel
    *        space, and either no ProcessCallback is specified, or the
    *        ProcessCallback returns true.
    */
-		public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, Func<FlxObject, FlxObject, Boolean> NotifyCallback = null)
+		public void load (FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, Func<FlxObject, FlxObject, Boolean> NotifyCallback = null)
 		{
-			load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, null);
+			load (ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, null);
 		}
 
 		/**
@@ -437,9 +427,9 @@ namespace SharpFlixel
    *        FlxGroup. If null, the first parameter will be checked against
    *        itself.
    */
-		public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2)
+		public void load (FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2)
 		{
-			load(ObjectOrGroup1, ObjectOrGroup2, null, null);
+			load (ObjectOrGroup1, ObjectOrGroup2, null, null);
 		}
 
 		/**
@@ -453,47 +443,39 @@ namespace SharpFlixel
    *        to add the objects. Options are <code>A_LIST</code> and
    *        <code>B_LIST</code>.
    */
-		public void add(FlxBasic ObjectOrGroup, uint List)
+		public void add (FlxBasic ObjectOrGroup, uint List)
 		{
 			_list = List;
-			if(ObjectOrGroup is FlxGroup)
-			{
+			if (ObjectOrGroup is FlxGroup) {
 				int i = 0;
 				FlxBasic basic;
-				List<FlxBasic> members = ((FlxGroup) ObjectOrGroup).Members;
+				List<FlxBasic> members = ((FlxGroup)ObjectOrGroup).Members;
 				int l = (int)((FlxGroup)(ObjectOrGroup)).length;
-				while(i < l)
-				{
-					basic = members.ElementAt(i++);
-					if((basic != null) && basic.Exists)
-					{
-						if(basic is FlxGroup)
-							add(basic, List);
-						else if(basic is FlxObject)
-						{
-							_object = (FlxObject) basic;
-							if(_object.Exists && _object.AllowCollisions > 0)
-							{
+				while (i < l) {
+					basic = members.ElementAt (i++);
+					if ((basic != null) && basic.Exists) {
+						if (basic is FlxGroup)
+							add (basic, List);
+						else if (basic is FlxObject) {
+							_object = (FlxObject)basic;
+							if (_object.Exists && _object.AllowCollisions > 0) {
 								_objectLeftEdge = _object.X;
 								_objectTopEdge = _object.Y;
 								_objectRightEdge = _object.X + _object.Width;
 								_objectBottomEdge = _object.Y + _object.Height;
-								addObject();
+								addObject ();
 							}
 						}
 					}
 				}
-			}
-			else
-			{
-				_object = (FlxObject) ObjectOrGroup;
-				if(_object.Exists && _object.AllowCollisions > 0)
-				{
+			} else {
+				_object = (FlxObject)ObjectOrGroup;
+				if (_object.Exists && _object.AllowCollisions > 0) {
 					_objectLeftEdge = _object.X;
 					_objectTopEdge = _object.Y;
 					_objectRightEdge = _object.X + _object.Width;
 					_objectBottomEdge = _object.Y + _object.Height;
-					addObject();
+					addObject ();
 				}
 			}
 		}
@@ -502,117 +484,101 @@ namespace SharpFlixel
    * Internal function for recursively navigating and creating the tree while
    * adding objects to the appropriate nodes.
    */
-		protected void addObject()
+		protected void addObject ()
 		{
 			// If this quad (not its children) lies entirely inside this object, add
 			// it here
-			if(!_canSubdivide || ((_leftEdge >= _objectLeftEdge) && (_rightEdge <= _objectRightEdge) && (_topEdge >= _objectTopEdge) && (_bottomEdge <= _objectBottomEdge)))
-			{
-				addToList();
+			if (!_canSubdivide || ((_leftEdge >= _objectLeftEdge) && (_rightEdge <= _objectRightEdge) && (_topEdge >= _objectTopEdge) && (_bottomEdge <= _objectBottomEdge))) {
+				addToList ();
 				return;
 			}
 
 			// See if the selected object fits completely inside any of the
 			// quadrants
-			if((_objectLeftEdge > _leftEdge) && (_objectRightEdge < _midpointX))
-			{
-				if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
-				{
-					if(_northWestTree == null)
-						_northWestTree = new FlxQuadTree(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
-					_northWestTree.addObject();
+			if ((_objectLeftEdge > _leftEdge) && (_objectRightEdge < _midpointX)) {
+				if ((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY)) {
+					if (_northWestTree == null)
+						_northWestTree = new FlxQuadTree (_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
+					_northWestTree.addObject ();
 					return;
 				}
-				if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
-				{
-					if(_southWestTree == null)
-						_southWestTree = new FlxQuadTree(_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
-					_southWestTree.addObject();
+				if ((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge)) {
+					if (_southWestTree == null)
+						_southWestTree = new FlxQuadTree (_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
+					_southWestTree.addObject ();
 					return;
 				}
 			}
-			if((_objectLeftEdge > _midpointX) && (_objectRightEdge < _rightEdge))
-			{
-				if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
-				{
-					if(_northEastTree == null)
-						_northEastTree = new FlxQuadTree(_midpointX, _topEdge, _halfWidth, _halfHeight, this);
-					_northEastTree.addObject();
+			if ((_objectLeftEdge > _midpointX) && (_objectRightEdge < _rightEdge)) {
+				if ((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY)) {
+					if (_northEastTree == null)
+						_northEastTree = new FlxQuadTree (_midpointX, _topEdge, _halfWidth, _halfHeight, this);
+					_northEastTree.addObject ();
 					return;
 				}
-				if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
-				{
-					if(_southEastTree == null)
-						_southEastTree = new FlxQuadTree(_midpointX, _midpointY, _halfWidth, _halfHeight, this);
-					_southEastTree.addObject();
+				if ((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge)) {
+					if (_southEastTree == null)
+						_southEastTree = new FlxQuadTree (_midpointX, _midpointY, _halfWidth, _halfHeight, this);
+					_southEastTree.addObject ();
 					return;
 				}
 			}
 
 			// If it wasn't completely contained we have to check out the partial
 			// overlaps
-			if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
-			{
-				if(_northWestTree == null)
-					_northWestTree = new FlxQuadTree(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
-				_northWestTree.addObject();
+			if ((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY)) {
+				if (_northWestTree == null)
+					_northWestTree = new FlxQuadTree (_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
+				_northWestTree.addObject ();
 			}
-			if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
-			{
-				if(_northEastTree == null)
-					_northEastTree = new FlxQuadTree(_midpointX, _topEdge, _halfWidth, _halfHeight, this);
-				_northEastTree.addObject();
+			if ((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY)) {
+				if (_northEastTree == null)
+					_northEastTree = new FlxQuadTree (_midpointX, _topEdge, _halfWidth, _halfHeight, this);
+				_northEastTree.addObject ();
 			}
-			if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
-			{
-				if(_southEastTree == null)
-					_southEastTree = new FlxQuadTree(_midpointX, _midpointY, _halfWidth, _halfHeight, this);
-				_southEastTree.addObject();
+			if ((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge)) {
+				if (_southEastTree == null)
+					_southEastTree = new FlxQuadTree (_midpointX, _midpointY, _halfWidth, _halfHeight, this);
+				_southEastTree.addObject ();
 			}
-			if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
-			{
-				if(_southWestTree == null)
-					_southWestTree = new FlxQuadTree(_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
-				_southWestTree.addObject();
+			if ((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge)) {
+				if (_southWestTree == null)
+					_southWestTree = new FlxQuadTree (_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
+				_southWestTree.addObject ();
 			}
 		}
 
 		/**
    * Internal function for recursively adding objects to leaf lists.
    */
-		protected void addToList()
+		protected void addToList ()
 		{
 			FlxList ot;
-			if(_list == A_LIST)
-			{
-				if(_tailA.Object != null)
-				{
+			if (_list == A_LIST) {
+				if (_tailA.Object != null) {
 					ot = _tailA;
-					_tailA = new FlxList();
+					_tailA = new FlxList ();
 					ot.next = _tailA;
 				}
 				_tailA.Object = _object;
-			}
-			else
-			{
-				if(_tailB.Object != null)
-				{
+			} else {
+				if (_tailB.Object != null) {
 					ot = _tailB;
-					_tailB = new FlxList();
+					_tailB = new FlxList ();
 					ot.next = _tailB;
 				}
 				_tailB.Object = _object;
 			}
-			if(!_canSubdivide)
+			if (!_canSubdivide)
 				return;
-			if(_northWestTree != null)
-				_northWestTree.addToList();
-			if(_northEastTree != null)
-				_northEastTree.addToList();
-			if(_southEastTree != null)
-				_southEastTree.addToList();
-			if(_southWestTree != null)
-				_southWestTree.addToList();
+			if (_northWestTree != null)
+				_northWestTree.addToList ();
+			if (_northEastTree != null)
+				_northEastTree.addToList ();
+			if (_southEastTree != null)
+				_southEastTree.addToList ();
+			if (_southWestTree != null)
+				_southWestTree.addToList ();
 		}
 
 		/**
@@ -622,23 +588,20 @@ namespace SharpFlixel
    * 
    * @return Whether or not any overlaps were found.
    */
-		public Boolean execute()
+		public Boolean execute ()
 		{
 			Boolean overlapProcessed = false;
 			FlxList iterator;
 
-			if(_headA.Object != null)
-			{
+			if (_headA.Object != null) {
 				iterator = _headA;
-				while(iterator != null)
-				{
+				while (iterator != null) {
 					_object = iterator.Object;
-					if(_useBothLists)
+					if (_useBothLists)
 						_iterator = _headB;
 					else
 						_iterator = iterator.next;
-					if(_object.Exists && (_object.AllowCollisions > 0) && (_iterator != null) && (_iterator.Object != null) && _iterator.Object.Exists && overlapNode())
-					{
+					if (_object.Exists && (_object.AllowCollisions > 0) && (_iterator != null) && (_iterator.Object != null) && _iterator.Object.Exists && overlapNode ()) {
 						overlapProcessed = true;
 					}
 					iterator = iterator.next;
@@ -646,13 +609,13 @@ namespace SharpFlixel
 			}
 
 			// Advance through the tree by calling overlap on each child
-			if((_northWestTree != null) && _northWestTree.execute())
+			if ((_northWestTree != null) && _northWestTree.execute ())
 				overlapProcessed = true;
-			if((_northEastTree != null) && _northEastTree.execute())
+			if ((_northEastTree != null) && _northEastTree.execute ())
 				overlapProcessed = true;
-			if((_southEastTree != null) && _southEastTree.execute())
+			if ((_southEastTree != null) && _southEastTree.execute ())
 				overlapProcessed = true;
-			if((_southWestTree != null) && _southWestTree.execute())
+			if ((_southWestTree != null) && _southWestTree.execute ())
 				overlapProcessed = true;
 
 			return overlapProcessed;
@@ -664,19 +627,17 @@ namespace SharpFlixel
    * 
    * @return Whether or not any overlaps were found.
    */
-		protected Boolean overlapNode()
+		protected Boolean overlapNode ()
 		{
 			// Walk the list and check for overlaps
 			Boolean overlapProcessed = false;
 			FlxObject checkObject;
-			while(_iterator != null)
-			{
-				if(!_object.Exists || (_object.AllowCollisions <= 0))
+			while (_iterator != null) {
+				if (!_object.Exists || (_object.AllowCollisions <= 0))
 					break;
 
 				checkObject = _iterator.Object;
-				if((_object == checkObject) || ((_object != null) && (_object.Equals(checkObject))) || !checkObject.Exists || (checkObject.AllowCollisions <= 0))
-				{
+				if ((_object == checkObject) || ((_object != null) && (_object.Equals (checkObject))) || !checkObject.Exists || (checkObject.AllowCollisions <= 0)) {
 					_iterator = _iterator.next;
 					continue;
 				}
@@ -698,15 +659,13 @@ namespace SharpFlixel
 				_checkObjectHullHeight = checkObject.Height + ((_checkObjectHullHeight > 0) ? _checkObjectHullHeight : -_checkObjectHullHeight);
 
 				// check for intersection of the two hulls
-				if((_objectHullX + _objectHullWidth > _checkObjectHullX) && (_objectHullX < _checkObjectHullX + _checkObjectHullWidth)
-					&& (_objectHullY + _objectHullHeight > _checkObjectHullY) && (_objectHullY < _checkObjectHullY + _checkObjectHullHeight))
-				{
+				if ((_objectHullX + _objectHullWidth > _checkObjectHullX) && (_objectHullX < _checkObjectHullX + _checkObjectHullWidth)
+				   && (_objectHullY + _objectHullHeight > _checkObjectHullY) && (_objectHullY < _checkObjectHullY + _checkObjectHullHeight)) {
 					// Execute callback functions if they exist
-					if((_processingCallback == null) || _processingCallback(_object, checkObject))
-					{
+					if ((_processingCallback == null) || _processingCallback (_object, checkObject)) {
 						overlapProcessed = true;
-						if(_notifyCallback != null)
-							_notifyCallback(_object, checkObject);
+						if (_notifyCallback != null)
+							_notifyCallback (_object, checkObject);
 					}
 
 				}
