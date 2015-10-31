@@ -13,55 +13,260 @@ using flxSharp.flxSharp;
 
 namespace fliXNA_xbox
 {
-    public class FlxQuadTree : FlxRect
-    {
-        public const uint A_LIST = 0;
-        public const uint B_LIST = 1;
-        static public uint divisions;
-        protected Boolean _canSubdivide;
-        protected FlxList _headA;
-        protected FlxList _tailA;
-        protected FlxList _headB;
-        protected FlxList _tailB;
-        protected uint _min;
-        protected FlxQuadTree _northWestTree;
-        protected FlxQuadTree _northEastTree;
-        protected FlxQuadTree _southEastTree;
-        protected FlxQuadTree _southWestTree;
-        protected float _leftEdge;
-        protected float _rightEdge;
-        protected float _topEdge;
-        protected float _bottomEdge;
-        protected float _halfWidth;
-        protected float _halfHeight;
-        protected float _midpointX;
-        protected float _midpointY;
-        protected FlxObject _object;
-        protected float _objectLeftEdge;
-        protected float _objectTopEdge;
-        protected float _objectRightEdge;
-        protected float _objectBottomEdge;
-        protected uint _list;
-        protected Boolean _useBothLists;
-        protected Func<FlxObject, FlxObject, Boolean> _processingCallback;
-        protected Func<FlxObject, FlxObject, Boolean> _notifyCallback;
-        protected FlxList _iterator;
-        protected float _objectHullX;
-        protected float _objectHullY;
-        protected float _objectHullWidth;
-        protected float _objectHullHeight;
-        protected float _checkObjectHullX;
-        protected float _checkObjectHullY;
-        protected float _checkObjectHullWidth;
-        protected float _checkObjectHullHeight;
+	public class FlxQuadTree : FlxRect
+	{
 
-        public FlxQuadTree(float X, float Y, float Width, float Height, FlxQuadTree Parent = null)
-            : base(X, Y, Width, Height)
+
+		/**
+ * A fairly generic quad tree structure for rapid overlap checks. FlxQuadTree is
+ * also configured for single or dual list operation. You can add items either
+ * to its A list or its B list. When you do an overlap check, you can compare
+ * the A list to itself, or the A list against the B list. Handy for different
+ * things!
+ * 
+ */
+
+	/**
+	* Flag for specifying that you want to add an object to the A list.
+		*/
+		public const uint A_LIST = 0;
+	/**
+   * Flag for specifying that you want to add an object to the B list.
+   */
+		public const uint B_LIST = 1;
+
+		/**
+   * Controls the granularity of the quad tree. Default is 6 (decent
+   * performance on large and small worlds).
+   */
+		static public uint divisions;
+
+		/**
+   * Whether this branch of the tree can be subdivided or not.
+   */
+		protected Boolean _canSubdivide;
+
+		/**
+   * Refers to the internal A and B linked lists, which are used to store
+   * objects in the leaves.
+   */
+		protected FlxList _headA;
+		/**
+   * Refers to the internal A and B linked lists, which are used to store
+   * objects in the leaves.
+   */
+		protected FlxList _tailA;
+		/**
+   * Refers to the internal A and B linked lists, which are used to store
+   * objects in the leaves.
+   */
+		protected FlxList _headB;
+		/**
+   * Refers to the internal A and B linked lists, which are used to store
+   * objects in the leaves.
+   */
+		protected FlxList _tailB;
+
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		static protected int _min;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected FlxQuadTree _northWestTree;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected FlxQuadTree _northEastTree;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected FlxQuadTree _southEastTree;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected FlxQuadTree _southWestTree;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _leftEdge;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _rightEdge;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _topEdge;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _bottomEdge;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _halfWidth;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _halfHeight;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _midpointX;
+		/**
+   * Internal, governs and assists with the formation of the tree.
+   */
+		protected float _midpointY;
+
+		/**
+   * Internal, used to reduce recursive method parameters during object
+   * placement and tree formation.
+   */
+		static protected FlxObject _object;
+		/**
+   * Internal, used to reduce recursive method parameters during object
+   * placement and tree formation.
+   */
+		static protected float _objectLeftEdge;
+		/**
+   * Internal, used to reduce recursive method parameters during object
+   * placement and tree formation.
+   */
+		static protected float _objectTopEdge;
+		/**
+   * Internal, used to reduce recursive method parameters during object
+   * placement and tree formation.
+   */
+		static protected float _objectRightEdge;
+		/**
+   * Internal, used to reduce recursive method parameters during object
+   * placement and tree formation.
+   */
+		static protected float _objectBottomEdge;
+
+		/**
+   * Internal, used during tree processing and overlap checks.
+   */
+		static protected uint _list;
+		/**
+   * Internal, used during tree processing and overlap checks.
+   */
+		static protected Boolean _useBothLists;
+		/**
+   * Internal, used during tree processing and overlap checks.
+   */
+		static protected Func<FlxObject, FlxObject, Boolean> _processingCallback;
+
+		//static protected IFlxObject _processingCallback;
+		/**
+   * Internal, used during tree processing and overlap checks.
+   */
+		static protected Func<FlxObject, FlxObject, Boolean> _notifyCallback;
+		//static protected IFlxCollision _notifyCallback;
+		/**
+   * Internal, used during tree processing and overlap checks.
+   */
+		static protected FlxList _iterator;
+
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _objectHullX;
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _objectHullY;
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _objectHullWidth;
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _objectHullHeight;
+
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _checkObjectHullX;
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _checkObjectHullY;
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _checkObjectHullWidth;
+		/**
+   * Internal, helpers for comparing actual object-to-object overlap - see
+   * <code>overlapNode()</code>.
+   */
+		static protected float _checkObjectHullHeight;
+
+		/**
+   * Internal, a pool of <code>FlxQuadTree</code>s to prevent constant
+   * <code>new</code> calls.
+   
+      static private Pool<FlxQuadTree> _pool = new Pool<FlxQuadTree>()
+      {
+        @Override
+        protected FlxQuadTree newObject()
         {
-            _headA = _tailA = new FlxList();
-            _headB = _tailB = new FlxList();
+          return new FlxQuadTree();
+        }
+      };
+*/
+		/**
+		* Get a new Quad Tree node from the pool.
+		* 
+		* @param X The X-coordinate of the point in space.
+		* @param Y The Y-coordinate of the point in space.
+		* @param Width Desired width of this node.
+		* @param Height Desired height of this node.
+		* @param Parent The parent branch or node. Pass null to create a root.
+		* 
+		* @return A new <code>FlxQuadTree</code>.
 
-            //Copy the parent's children (if there are any)
+			static public FlxQuadTree getNew(float X, float Y, float Width, float Height, FlxQuadTree Parent)
+		{
+			FlxQuadTree quadTree = _pool.obtain();
+			quadTree.init(X, Y, Width, Height, Parent);
+			return quadTree;
+		}
+		*/
+		/**
+		* Has to be public for GWT reflection.
+			*/
+			public FlxQuadTree(float X, float Y, float Width, float Height, FlxQuadTree Parent = null)
+		{
+			init(X, Y, Width, Height, Parent);
+		}
+
+		/**
+   * Instantiate a new Quad Tree node.
+   * 
+   * @param X The X-coordinate of the point in space.
+   * @param Y The Y-coordinate of the point in space.
+   * @param Width Desired width of this node.
+   * @param Height Desired height of this node.
+   * @param Parent The parent branch or node. Pass null to create a root.
+   */
+		protected void init(float X, float Y, float Width, float Height, FlxQuadTree Parent)
+		{
+			make(X, Y, Width, Height);
+			_headA = _tailA = new FlxList();
+			_headB = _tailB = new FlxList();
+
+			// Copy the parent's children (if there are any)
 			if(Parent != null)
 			{
 				FlxList iterator;
@@ -97,34 +302,54 @@ namespace fliXNA_xbox
 					}
 				}
 			}
-            else
-                _min = (uint)(base.Width + base.Height) / (2 * divisions);
-            _canSubdivide = (base.Width > _min) || (base.Height > _min);
+			else
+				_min = (int) ((Width + Height) / (2 * divisions));
+			_canSubdivide = (Width > _min) || (Height > _min);
 
-            //Set up comparison/sort helpers
-            _northWestTree = null;
-            _northEastTree = null;
-            _southEastTree = null;
-            _southWestTree = null;
-            _leftEdge = base.X;
-            _rightEdge = base.X + base.Width;
-            _halfWidth = base.Width / 2;
-            _midpointX = _leftEdge + _halfWidth;
-            _topEdge = base.Y;
-            _bottomEdge = base.Y + base.Height;
-            _halfHeight = base.Height / 2;
-            _midpointY = _topEdge + _halfHeight;
-        }
+			// Set up comparison/sort helpers
+			_northWestTree = null;
+			_northEastTree = null;
+			_southEastTree = null;
+			_southWestTree = null;
+			_leftEdge = X;
+			_rightEdge = X + Width;
+			_halfWidth = Width / 2f;
+			_midpointX = _leftEdge + _halfWidth;
+			_topEdge = Y;
+			_bottomEdge = Y + Height;
+			_halfHeight = Height / 2f;
+			_midpointY = _topEdge + _halfHeight;
+		}
 
-        public void destroy()
+		/**
+   * Instantiate a new Quad Tree node.
+   * 
+   * @param X The X-coordinate of the point in space.
+   * @param Y The Y-coordinate of the point in space.
+   * @param Width Desired width of this node.
+   * @param Height Desired height of this node.
+   */
+		protected void init(float X, float Y, float Width, float Height)
 		{
-			_headA.destroy();
+			init(X, Y, Width, Height, null);
+		}
+
+		/**
+   * Clean up memory.
+   */
+		public void destroy()
+		{
+			if(_headA != null)
+				_headA.destroy();
 			_headA = null;
-			_tailA.destroy();
+			// if(_tailA != null)
+			// _tailA.destroy();
 			_tailA = null;
-			_headB.destroy();
+			if(_headB != null)
+				_headB.destroy();
 			_headB = null;
-			_tailB.destroy();
+			// if(_tailB != null)
+			// _tailB.destroy();
 			_tailB = null;
 
 			if(_northWestTree != null)
@@ -143,9 +368,31 @@ namespace fliXNA_xbox
 			_object = null;
 			_processingCallback = null;
 			_notifyCallback = null;
+
+			//_pool.free(this);
 		}
 
-        public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2 = null, Func<FlxObject, FlxObject, Boolean> NotifyCallback = null, Func<FlxObject, FlxObject, Boolean> ProcessCallback = null)
+		/**
+   * Load objects and/or groups into the quad tree, and register notify and
+   * processing callbacks.
+   * 
+   * @param ObjectOrGroup1 Any object that is or extends FlxObject or
+   *        FlxGroup.
+   * @param ObjectOrGroup2 Any object that is or extends FlxObject or
+   *        FlxGroup. If null, the first parameter will be checked against
+   *        itself.
+   * @param NotifyCallback A function with the form
+   *        <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code>
+   *        that is called whenever two objects are found to overlap in world
+   *        space, and either no ProcessCallback is specified, or the
+   *        ProcessCallback returns true.
+   * @param ProcessCallback A function with the form
+   *        <code>myFunction(Object1:FlxObject,Object2:FlxObject):Boolean</code>
+   *        that is called whenever two objects are found to overlap in world
+   *        space. The NotifyCallback is only called if this function returns
+   *        true. See FlxObject.separate().
+   */
+		public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, Func<FlxObject, FlxObject, Boolean> NotifyCallback = null, Func<FlxObject, FlxObject, Boolean> ProcessCallback = null)
 		{
 			add(ObjectOrGroup1, A_LIST);
 			if(ObjectOrGroup2 != null)
@@ -159,27 +406,72 @@ namespace fliXNA_xbox
 			_processingCallback = ProcessCallback;
 		}
 
-        public void add(FlxBasic ObjectOrGroup, uint List)
+		/**
+   * Load objects and/or groups into the quad tree, and register notify and
+   * processing callbacks.
+   * 
+   * @param ObjectOrGroup1 Any object that is or extends FlxObject or
+   *        FlxGroup.
+   * @param ObjectOrGroup2 Any object that is or extends FlxObject or
+   *        FlxGroup. If null, the first parameter will be checked against
+   *        itself.
+   * @param NotifyCallback A function with the form
+   *        <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code>
+   *        that is called whenever two objects are found to overlap in world
+   *        space, and either no ProcessCallback is specified, or the
+   *        ProcessCallback returns true.
+   */
+		public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2, Func<FlxObject, FlxObject, Boolean> NotifyCallback = null)
+		{
+			load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, null);
+		}
+
+		/**
+   * Load objects and/or groups into the quad tree, and register notify and
+   * processing callbacks.
+   * 
+   * @param ObjectOrGroup1 Any object that is or extends FlxObject or
+   *        FlxGroup.
+   * @param ObjectOrGroup2 Any object that is or extends FlxObject or
+   *        FlxGroup. If null, the first parameter will be checked against
+   *        itself.
+   */
+		public void load(FlxBasic ObjectOrGroup1, FlxBasic ObjectOrGroup2)
+		{
+			load(ObjectOrGroup1, ObjectOrGroup2, null, null);
+		}
+
+		/**
+   * Call this function to add an object to the root of the tree. This
+   * function will recursively add all group members, but not the groups
+   * themselves.
+   * 
+   * @param ObjectOrGroup FlxObjects are just added, FlxGroups are recursed
+   *        and their applicable members added accordingly.
+   * @param List A <code>int</code> flag indicating the list to which you want
+   *        to add the objects. Options are <code>A_LIST</code> and
+   *        <code>B_LIST</code>.
+   */
+		public void add(FlxBasic ObjectOrGroup, uint List)
 		{
 			_list = List;
 			if(ObjectOrGroup is FlxGroup)
 			{
-				uint i = 0;
+				int i = 0;
 				FlxBasic basic;
-                List<FlxBasic> members = new List<FlxBasic>();
-                members = (ObjectOrGroup as FlxGroup).Members;
-                uint l = (uint)members.Count;
+				List<FlxBasic> members = ((FlxGroup) ObjectOrGroup).Members;
+				int l = (int)((FlxGroup)(ObjectOrGroup)).length;
 				while(i < l)
 				{
-					basic = members[(int)i++] as FlxBasic;
+					basic = members.ElementAt(i++);
 					if((basic != null) && basic.Exists)
 					{
 						if(basic is FlxGroup)
-							add(basic,List);
+							add(basic, List);
 						else if(basic is FlxObject)
 						{
-							_object = basic as FlxObject;
-                            if(_object.Exists && Convert.ToBoolean(_object.AllowCollisions))
+							_object = (FlxObject) basic;
+							if(_object.Exists && _object.AllowCollisions > 0)
 							{
 								_objectLeftEdge = _object.X;
 								_objectTopEdge = _object.Y;
@@ -193,8 +485,8 @@ namespace fliXNA_xbox
 			}
 			else
 			{
-				_object = ObjectOrGroup as FlxObject;
-				if(_object.Exists && Convert.ToBoolean(_object.AllowCollisions) )
+				_object = (FlxObject) ObjectOrGroup;
+				if(_object.Exists && _object.AllowCollisions > 0)
 				{
 					_objectLeftEdge = _object.X;
 					_objectTopEdge = _object.Y;
@@ -205,31 +497,35 @@ namespace fliXNA_xbox
 			}
 		}
 
-
-
-        protected void addObject()
+		/**
+   * Internal function for recursively navigating and creating the tree while
+   * adding objects to the appropriate nodes.
+   */
+		protected void addObject()
 		{
-			//If this quad (not its children) lies entirely inside this object, add it here
+			// If this quad (not its children) lies entirely inside this object, add
+			// it here
 			if(!_canSubdivide || ((_leftEdge >= _objectLeftEdge) && (_rightEdge <= _objectRightEdge) && (_topEdge >= _objectTopEdge) && (_bottomEdge <= _objectBottomEdge)))
 			{
 				addToList();
 				return;
 			}
-			
-			//See if the selected object fits completely inside any of the quadrants
+
+			// See if the selected object fits completely inside any of the
+			// quadrants
 			if((_objectLeftEdge > _leftEdge) && (_objectRightEdge < _midpointX))
 			{
 				if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 				{
 					if(_northWestTree == null)
-						_northWestTree = new FlxQuadTree(_leftEdge,_topEdge,_halfWidth,_halfHeight,this);
+						_northWestTree = new FlxQuadTree(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
 					_northWestTree.addObject();
 					return;
 				}
 				if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
 				{
 					if(_southWestTree == null)
-						_southWestTree = new FlxQuadTree(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
+						_southWestTree = new FlxQuadTree(_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
 					_southWestTree.addObject();
 					return;
 				}
@@ -239,48 +535,51 @@ namespace fliXNA_xbox
 				if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 				{
 					if(_northEastTree == null)
-						_northEastTree = new FlxQuadTree(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
+						_northEastTree = new FlxQuadTree(_midpointX, _topEdge, _halfWidth, _halfHeight, this);
 					_northEastTree.addObject();
 					return;
 				}
 				if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
 				{
 					if(_southEastTree == null)
-						_southEastTree = new FlxQuadTree(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
+						_southEastTree = new FlxQuadTree(_midpointX, _midpointY, _halfWidth, _halfHeight, this);
 					_southEastTree.addObject();
 					return;
 				}
 			}
-			
-			//If it wasn't completely contained we have to check out the partial overlaps
+
+			// If it wasn't completely contained we have to check out the partial
+			// overlaps
 			if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
 			{
 				if(_northWestTree == null)
-					_northWestTree = new FlxQuadTree(_leftEdge,_topEdge,_halfWidth,_halfHeight,this);
+					_northWestTree = new FlxQuadTree(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
 				_northWestTree.addObject();
 			}
 			if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
 			{
 				if(_northEastTree == null)
-					_northEastTree = new FlxQuadTree(_midpointX,_topEdge,_halfWidth,_halfHeight,this);
+					_northEastTree = new FlxQuadTree(_midpointX, _topEdge, _halfWidth, _halfHeight, this);
 				_northEastTree.addObject();
 			}
 			if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
 			{
 				if(_southEastTree == null)
-					_southEastTree = new FlxQuadTree(_midpointX,_midpointY,_halfWidth,_halfHeight,this);
+					_southEastTree = new FlxQuadTree(_midpointX, _midpointY, _halfWidth, _halfHeight, this);
 				_southEastTree.addObject();
 			}
 			if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
 			{
 				if(_southWestTree == null)
-					_southWestTree = new FlxQuadTree(_leftEdge,_midpointY,_halfWidth,_halfHeight,this);
+					_southWestTree = new FlxQuadTree(_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
 				_southWestTree.addObject();
 			}
 		}
 
-
-        protected void addToList()
+		/**
+   * Internal function for recursively adding objects to leaf lists.
+   */
+		protected void addToList()
 		{
 			FlxList ot;
 			if(_list == A_LIST)
@@ -315,12 +614,18 @@ namespace fliXNA_xbox
 				_southWestTree.addToList();
 		}
 
-
-        public Boolean execute()
+		/**
+   * <code>FlxQuadTree</code>'s other main function. Call this after adding
+   * objects using <code>FlxQuadTree.Load()</code> to compare the objects that
+   * you loaded.
+   * 
+   * @return Whether or not any overlaps were found.
+   */
+		public Boolean execute()
 		{
 			Boolean overlapProcessed = false;
 			FlxList iterator;
-			
+
 			if(_headA.Object != null)
 			{
 				iterator = _headA;
@@ -331,17 +636,15 @@ namespace fliXNA_xbox
 						_iterator = _headB;
 					else
 						_iterator = iterator.next;
-					if(	_object.Exists && (_object.AllowCollisions > 0) &&
-						(_iterator != null) && (_iterator.Object != null) &&
-						_iterator.Object.Exists && overlapNode())
+					if(_object.Exists && (_object.AllowCollisions > 0) && (_iterator != null) && (_iterator.Object != null) && _iterator.Object.Exists && overlapNode())
 					{
 						overlapProcessed = true;
 					}
 					iterator = iterator.next;
 				}
 			}
-			
-			//Advance through the tree by calling overlap on each child
+
+			// Advance through the tree by calling overlap on each child
 			if((_northWestTree != null) && _northWestTree.execute())
 				overlapProcessed = true;
 			if((_northEastTree != null) && _northEastTree.execute())
@@ -350,59 +653,66 @@ namespace fliXNA_xbox
 				overlapProcessed = true;
 			if((_southWestTree != null) && _southWestTree.execute())
 				overlapProcessed = true;
-			
+
 			return overlapProcessed;
 		}
 
-        protected Boolean overlapNode()
+		/**
+   * An internal function for comparing an object against the contents of a
+   * node.
+   * 
+   * @return Whether or not any overlaps were found.
+   */
+		protected Boolean overlapNode()
 		{
-			//Walk the list and check for overlaps
+			// Walk the list and check for overlaps
 			Boolean overlapProcessed = false;
 			FlxObject checkObject;
 			while(_iterator != null)
 			{
 				if(!_object.Exists || (_object.AllowCollisions <= 0))
 					break;
-				
+
 				checkObject = _iterator.Object;
-				if((_object == checkObject) || !checkObject.Exists || (checkObject.AllowCollisions <= 0))
+				if((_object == checkObject) || ((_object != null) && (_object.Equals(checkObject))) || !checkObject.Exists || (checkObject.AllowCollisions <= 0))
 				{
 					_iterator = _iterator.next;
 					continue;
 				}
-				
-				//calculate bulk hull for _object
-				_objectHullX = (_object.X < _object.Last.X)?_object.X:_object.Last.X;
-				_objectHullY = (_object.Y < _object.Last.Y)?_object.Y:_object.Last.Y;
+
+				// calculate bulk hull for _object
+				_objectHullX = (_object.X < _object.Last.X) ? _object.X : _object.Last.X;
+				_objectHullY = (_object.Y < _object.Last.Y) ? _object.Y : _object.Last.Y;
 				_objectHullWidth = _object.X - _object.Last.X;
-				_objectHullWidth = _object.Width + ((_objectHullWidth>0)?_objectHullWidth:-_objectHullWidth);
+				_objectHullWidth = _object.Width + ((_objectHullWidth > 0) ? _objectHullWidth : -_objectHullWidth);
 				_objectHullHeight = _object.Y - _object.Last.Y;
-				_objectHullHeight = _object.Height + ((_objectHullHeight>0)?_objectHullHeight:-_objectHullHeight);
-				
-				//calculate bulk hull for checkObject
-				_checkObjectHullX = (checkObject.X < checkObject.Last.X)?checkObject.X:checkObject.Last.X;
-				_checkObjectHullY = (checkObject.Y < checkObject.Last.Y)?checkObject.Y:checkObject.Last.Y;
+				_objectHullHeight = _object.Height + ((_objectHullHeight > 0) ? _objectHullHeight : -_objectHullHeight);
+
+				// calculate bulk hull for checkObject
+				_checkObjectHullX = (checkObject.X < checkObject.Last.X) ? checkObject.X : checkObject.Last.X;
+				_checkObjectHullY = (checkObject.Y < checkObject.Last.Y) ? checkObject.Y : checkObject.Last.Y;
 				_checkObjectHullWidth = checkObject.X - checkObject.Last.X;
-				_checkObjectHullWidth = checkObject.Width + ((_checkObjectHullWidth>0)?_checkObjectHullWidth:-_checkObjectHullWidth);
-                _checkObjectHullHeight = checkObject.Y - checkObject.Last.Y;
-				_checkObjectHullHeight = checkObject.Height + ((_checkObjectHullHeight>0)?_checkObjectHullHeight:-_checkObjectHullHeight);
-				
-				//check for intersection of the two hulls
-				if(	(_objectHullX + _objectHullWidth > _checkObjectHullX) &&
-					(_objectHullX < _checkObjectHullX + _checkObjectHullWidth) &&
-					(_objectHullY + _objectHullHeight > _checkObjectHullY) &&
-					(_objectHullY < _checkObjectHullY + _checkObjectHullHeight) )
+				_checkObjectHullWidth = checkObject.Width + ((_checkObjectHullWidth > 0) ? _checkObjectHullWidth : -_checkObjectHullWidth);
+				_checkObjectHullHeight = checkObject.Y - checkObject.Last.Y;
+				_checkObjectHullHeight = checkObject.Height + ((_checkObjectHullHeight > 0) ? _checkObjectHullHeight : -_checkObjectHullHeight);
+
+				// check for intersection of the two hulls
+				if((_objectHullX + _objectHullWidth > _checkObjectHullX) && (_objectHullX < _checkObjectHullX + _checkObjectHullWidth)
+					&& (_objectHullY + _objectHullHeight > _checkObjectHullY) && (_objectHullY < _checkObjectHullY + _checkObjectHullHeight))
 				{
-					//Execute callback functions if they exist
-					if((_processingCallback == null) || _processingCallback(_object,checkObject))
+					// Execute callback functions if they exist
+					if((_processingCallback == null) || _processingCallback(_object, checkObject))
+					{
 						overlapProcessed = true;
-					if(overlapProcessed && (_notifyCallback != null))
-						_notifyCallback(_object,checkObject);
+						if(_notifyCallback != null)
+							_notifyCallback(_object, checkObject);
+					}
+
 				}
 				_iterator = _iterator.next;
 			}
-			
+
 			return overlapProcessed;
 		}
-    }
+	}
 }
