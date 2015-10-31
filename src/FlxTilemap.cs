@@ -17,6 +17,9 @@ namespace fliXNA_xbox
 {
     public class FlxTilemap : FlxObject
     {
+		static public String ImgAuto = "autotiles";
+		static public String ImgAutoAlt = "autotiles_alt";
+
         public const uint OFF = 0;
         public const uint AUTO = 1;
         public const uint ALT = 2;
