@@ -22,7 +22,7 @@ This project is based on multiple different Flixel projects: Flixel, flxSharp by
 
 ### Setting up MonoGame
 
-- Install mono - [Downoad mono](http://www.mono-project.com/docs/getting-started/install/mac/)
+- Install mono - [Download mono](http://www.mono-project.com/docs/getting-started/install/mac/)
 - Clone MonoGame repo - `git clone git@github.com:mono/MonoGame.git`
 - Clone MonoGame Dependencies repo to Dependencies directory - `cd ThirdParty && git clone git@github.com:MonoGame/MonoGame.Dependencies.git`
 - Run `mono Protobuild.exe` in MonoGame root directory
