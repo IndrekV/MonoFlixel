@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{AAB37E8E-80C8-4AEE-8540-2435A6CD8559}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>MonoFlixel</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)flixel\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxBasic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxCamera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxEmitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxParticle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxPoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxRect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxSound.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxSprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxText.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxTile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxTileblock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxTilemap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxU.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxAnim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxColor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxConsole.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxGame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxGameRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxGamepad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxKeyboard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxMouse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxQuadTree.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Content\ConsoleFont.spritefont" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\ConsoleFont.xnb" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\applause.wav" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\autotiles.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\autotiles_alt.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\background.mp3" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\bg.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\default.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\flxSharpContent.contentproj" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\megaman_run.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\megaman_run_test.png" />
+  </ItemGroup>
+</Project>
