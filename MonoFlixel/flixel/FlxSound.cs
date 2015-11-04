@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Audio;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// This is the universal flixel sound object, used for streaming, music, and sound effects.

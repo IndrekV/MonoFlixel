@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// This is an organizational class that can update and render a bunch of <code>FlxBasic</code>s.

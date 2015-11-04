@@ -1,4 +1,4 @@
-﻿using SharpFlixel;
+﻿using MonoFlixel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// This is a global helper class full of useful functions for audio,

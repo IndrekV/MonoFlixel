@@ -2,9 +2,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using SharpFlixel;
+using MonoFlixel;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// This is a simple particle class that extends the default behavior

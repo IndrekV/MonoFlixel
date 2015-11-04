@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.

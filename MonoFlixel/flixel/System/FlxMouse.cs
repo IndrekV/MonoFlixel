@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     public class FlxMouse
     {

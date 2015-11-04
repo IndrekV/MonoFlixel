@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using SharpFlixel;
+using MonoFlixel;
 
 namespace SharpFlixel
 {

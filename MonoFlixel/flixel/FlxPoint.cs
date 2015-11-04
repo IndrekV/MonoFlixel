@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// Stores a 2D floating point coordinate.

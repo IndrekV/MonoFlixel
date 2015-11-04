@@ -1,10 +1,10 @@
-﻿using SharpFlixel;
+﻿using MonoFlixel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     public class FlxSprite : FlxObject
     {

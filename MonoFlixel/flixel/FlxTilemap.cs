@@ -11,9 +11,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using SharpFlixel;
+using MonoFlixel;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     public class FlxTilemap : FlxObject
     {

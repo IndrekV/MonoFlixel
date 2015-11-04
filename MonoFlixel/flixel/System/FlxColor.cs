@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     public class FlxColor
     {
