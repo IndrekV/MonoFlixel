@@ -1,4 +1,4 @@
-﻿<Properties>
+﻿<Properties StartupItem="MonoFlixel/MonoFlixel.shproj">
   <MonoDevelop.Ide.Workspace />
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -20,7 +20,7 @@ namespace MonoFlixel
         /// If you build and maintain your own version of flixel,
         /// you can give it your own name here.
         /// </summary>
-        public static readonly string LibraryName = "flxSharp";
+        public static readonly string LibraryName = "MonoFlixel";
 
         /// <summary>
         /// Assign a major version to your library.
