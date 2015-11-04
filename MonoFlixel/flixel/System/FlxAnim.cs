@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// Just a helper structure for the FlxSprite animation system.

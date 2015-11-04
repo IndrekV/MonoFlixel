@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using MonoFlixel;
 
-namespace SharpFlixel
+namespace MonoFlixel
 {
     /// <summary>
     /// <code>FlxEmitter</code> is a lightweight particle emitter.
