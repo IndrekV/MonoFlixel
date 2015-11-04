@@ -34,8 +34,9 @@ This project is based on multiple different Flixel projects: Flixel, flxSharp by
 
 - Clone this repo
 - Add MonoFlixel project to your Solution
-- Add MonoFlixel to your project's references
+- Add MonoFlixel project to your project's references
 - Copy the defult asset files from MonoFlixel project Content directory to your project Content directory.
+- Add using clauses where needed `using MonoFlixel;`
 - All Done, Start creating your game.
 
 ## Licence
