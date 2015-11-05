@@ -77,9 +77,11 @@ namespace MonoFlixel
         /// </summary>
         /// <param name="flashPoint">Point	Any <code>Point</code>.</param>
         /// <returns>A reference to itself.</returns>
-        public FlxPoint copyFromFlash(object flashPoint)
+		public FlxPoint copyFromFlash(Vector2 Point)
         {
-            throw new NotSupportedException();
+			X = Point.X;
+			Y = Point.Y;
+			return this;
         }
 
         /// <summary>
@@ -87,9 +89,11 @@ namespace MonoFlixel
         /// </summary>
         /// <param name="flashPoint">Any <code>Point</code>.</param>
         /// <returns>A reference to the altered point parameter.</returns>
-        public object copyToflash(object flashPoint)
-        {
-            throw new NotSupportedException();
+		public object copyToflash(Vector2 Point)
+		{
+			Point.X = X;
+			Point.Y = Y;
+			return Point;
         }
 
         /// <summary>
