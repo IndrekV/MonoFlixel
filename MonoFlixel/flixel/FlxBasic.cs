@@ -112,11 +112,15 @@ namespace MonoFlixel
         /// </summary>
         public virtual void draw()
         {
+			/*FlxCamera camera = FlxG._activeCamera;*/
             if (Cameras == null)
             {
-                Cameras = FlxG.cameras;                
+                Cameras = FlxG.Cameras;
             }
-
+			/*
+			if(!cameras.Contains(camera, true))
+				return;
+			*/
             foreach (FlxCamera camera in Cameras)
             {
                 visibleCount++;
@@ -126,6 +130,10 @@ namespace MonoFlixel
                     drawDebug(camera);
                 }
             }
+			/*
+			if(FlxG.visualDebug && !IgnoreDrawDebug)
+				drawDebug(camera);
+			*/
         }
 
         /// <summary>
