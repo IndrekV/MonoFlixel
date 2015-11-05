@@ -1,0 +1,46 @@
+Fixed classes
+
+
+// ** CORE ** //
++ FlxBasic.cs
+- FlxCamera.cs
+- FlxG.cs
+- FlxObject.cs
+- FlxPath.cs
+- FlxRect.cs
+- FlxSound.cs
+- FlxState.cs
+- FlxTile.cs
+- FlxTilemap.cs
+- FlxButton.cs
+- FlxEmitter.cs
+- FlxGroup.cs
+- FlxParticle.cs
++ FlxPoint.cs
+- FlxS.cs
+- FlxSprite.cs
+- FlxText.cs
+- FlxTileblock.cs
+- FlxU.cs
+
+// ** SYSTEM ** //
+- FlxAnim.cs
+- FlxConsole.cs
+- FlxGameRunner.cs
+- FlxKeyboard.cs
+- FlxMouse.cs
+- FlxColor.cs
+- FlxGame.cs
+- FlxGamepad.cs
+- FlxList.cs
++ FlxQuadTree.cs
+
+// ** PLUGINS ** //
+
++ DebugPathDisplay
+
+// ** MISSING ** //
+
+
+
+drawDebug
