@@ -125,16 +125,15 @@ namespace MonoFlixel.Examples
 		 * @param Label The text that you want to appear on the button.
 		 * @param OnClick The function to call whenever the button is clicked.
 		 */
-		public FlxButton(float x = 0, float y = 0, String Label = null, Func<FlxObject, FlxObject, Boolean> OnClick = null)
+		public FlxButton(float x = 0, float y = 0, String label = null, Func<FlxObject, FlxObject, Boolean> OnClick = null) : base(x, y)
 		{
-			base(x, y);
 			if(Label != null)
 			{
-				Label = new FlxText(0, 0, 80, Label);
-				Label.SetFormat(null, 8, 0x333333, "center");
+				//Label = new FlxText(0, 0, 80, Label);
+				//Label.SetFormat(null, 8, 0x333333, "center");
 				LabelOffset = new FlxPoint(-1, 3);
 			}
-			loadGraphic(ImgDefaultButton, true, false, 80, 20);
+			loadGraphic(FlxS.ContentManager.Load<Texture2D>(ImgDefaultButton), true, false, 80, 20);
 			/*
 			onUp = OnClick;
 
@@ -153,7 +152,7 @@ namespace MonoFlixel.Examples
 			_initialized = false;
 		}
 		
-		public void destroy()
+		public override void destroy()
 		{
 			/*
 			if(FlxG.getStage() != null)
@@ -182,7 +181,7 @@ namespace MonoFlixel.Examples
 		}
 
 		
-		public void preUpdate()
+		public override void preUpdate()
 		{
 			base.preUpdate();
 			if(!_initialized)
@@ -199,7 +198,7 @@ namespace MonoFlixel.Examples
 		}
 
 		
-		public void update()
+		public override void update()
 		{
 			UpdateButton(); // Basic button logic
 
@@ -207,18 +206,18 @@ namespace MonoFlixel.Examples
 			// the Label appearance based on animation frame.
 			if(Label == null)
 				return;
-			switch(GetFrame())
+			switch(Frame)
 			{
 			case Highlight: // Extra behavior to accommodate checkbox logic.
-				Label.SetAlpha(1.0f);
+				Label.Alpha = 1.0f;
 				break;
 			case Pressed:
-				Label.SetAlpha(0.5f);
-				Label.y++;
+				Label.Alpha = 0.5f;
+				Label.Y++;
 				break;
 			case Normal:
 			default:
-				Label.SetAlpha(0.8f);
+				Label.Alpha = 0.8f;
 				break;
 			}
 		}
@@ -233,46 +232,51 @@ namespace MonoFlixel.Examples
 
 			// Figure out if the button is Highlighted or Pressed or what
 			// (ignore checkbox behavior for now).
+			/*
 			if(FlxG.Mouse.GetVisible())
 			{
 				if(Cameras == null)
-					Cameras = FlxG.Cameras;
+					Cameras = FlxG.cameras;
 				FlxCamera Camera;
 				int i = 0;
-				int l = Cameras.Count();
+				int l = Cameras.Count;
 				int pointerId = 0;
-				int totalPointers = FlxG.Mouse.ActivePointers + 1;
+				int totalPointers = /*FlxG.mouse.ActivePointers + 1;
 				Boolean offAll = true;
 				while(i < l)
 				{
-					Camera = Cameras.get(i++);
+					Camera = Cameras[i++];
 					while(pointerId < totalPointers)
 					{
-						FlxG.Mouse.GetWorldPosition(pointerId, Camera, _point);
-						if(OverlapsPoint(_point, true, Camera))
+						//FlxG.mouse.GetWorldPosition(pointerId, Camera, _tagPoint);
+						if(overlapsPoint(_tagPoint, true, Camera))
 						{
 							offAll = false;
-							if(FlxG.Mouse.Pressed(pointerId))
+							if(FlxG.mouse.Pressed(pointerId))
 							{
 								Status = Pressed;
-								if(FlxG.Mouse.JustPressed(pointerId))
+								if(FlxG.mouse.JustPressed(pointerId))
 								{
+									/*
 									if(OnDown != null)
 									{
 										OnDown.Callback();
 									}
 									if(SoundDown != null)
 										SoundDown.Play(true);
+
 								}
 							}
 
 							if(Status == Normal)
 							{
 								Status = Highlight;
+								/*
 								if(OnOver != null)
 									OnOver.Callback();
 								if(SoundOver != null)
 									SoundOver.Play(true);
+
 							}
 						}
 						++pointerId;
@@ -282,10 +286,13 @@ namespace MonoFlixel.Examples
 				{
 					if(Status != Normal)
 					{
+						/*
 						if(OnOut != null)
 							OnOut.Callback();
+
 						if(SoundOut != null)
 							SoundOut.Play(true);
+
 					}
 					Status = Normal;
 				}
@@ -306,9 +313,10 @@ namespace MonoFlixel.Examples
 
 			// Then pick the appropriate frame of animation
 			if((Status == Highlight) && (_onToggle || FlxG.mobile))
-				SetFrame(Normal);
+				Frame = Normal;
 			else
-				SetFrame(Status);
+				Frame = Status;
+				*/
 		}
 
 		/**
@@ -332,11 +340,11 @@ namespace MonoFlixel.Examples
 		
 		protected void ResetHelpers()
 		{
-			base.ResetHelpers();
+			base.resetHelpers();
 			if(Label != null)
 			{
 				Label.Width = Width;
-				Label.CalcFrame();
+				//Label.CalcFrame();
 			}
 		}
 
@@ -361,6 +369,7 @@ namespace MonoFlixel.Examples
 		public void setSounds(String SoundOver = null, float SoundOverVolume = 1.0f, String SoundOut = null, float SoundOutVolume = 1.0f, String SoundDown = null, float SoundDownVolume = 1.0f, String SoundUp = null,
 			float SoundUpVolume = 1.0f)
 		{
+			/*
 			if(SoundOver != null)
 				SoundOver = FlxG.loadSound(SoundOver, SoundOverVolume);
 			if(SoundOut != null)
@@ -369,12 +378,14 @@ namespace MonoFlixel.Examples
 				SoundDown = FlxG.loadSound(SoundDown, SoundDownVolume);
 			if(SoundUp != null)
 				SoundUp = FlxG.loadSound(SoundUp, SoundUpVolume);
+				*/
 		}
 
 		/**
 		 * Internal function for handling the actual callback call (for UI thread
 		 * dependent calls like <code>FlxU.openURL()</code>).
 		 */
+		/*
 		protected void OnMouseUp(MouseEvent e)
 		{
 			if(!Exists || !Visible || !Active || (Status != Pressed))
@@ -384,5 +395,6 @@ namespace MonoFlixel.Examples
 			if(SoundUp != null)
 				SoundUp.Play(true);
 		}
+		*/
 	}
 }
