@@ -190,55 +190,58 @@ namespace MonoFlixel
 		public FlxEmitter makeParticles(Texture2D graphics, uint Quantity = 50, uint BakedRotations = 0, bool Multiple = false, float Collide = 0.8f)
         {
 			maxSize = Quantity;
+			uint totalFrames = 0;
 
-            if (Multiple || BakedRotations > 0)
-            {
-                throw new NotSupportedException();
-            }
+			if (Multiple) {
+				FlxSprite sprite = new FlxSprite();
+				sprite.loadGraphic(graphics,true);
+				totalFrames = sprite.Frames;
+				sprite.destroy();
+			}
 
-            for (int i = 0; i < Quantity; ++i)
-            {
-                var particle = new FlxParticle();
-                particle.loadGraphic(graphics);
-
-                if (Collide > 0)
-                {
-                    particle.Width = particle.Width * Collide;
-                    particle.Height = particle.Height * Collide;
-                    particle.centerOffsets();
-                }
-                else
-                {
-                    particle.AllowCollisions = FlxObject.None;
-                }
-
-                particle.Exists = false;
-                this.add(particle);
-            }
-
-            /*
+			uint randomFrame;
 			FlxParticle particle;
-			uint i = 0;
+			int i = 0;
+
 			while(i < Quantity)
 			{
-                particle = new FlxParticle();
-                if (Multiple)
-                    particle.loadParticleGraphic(Graphic, Rotation);
-                else
-                    particle.loadGraphic(Graphic);
-				if(Collide > 0)
+				particle = new FlxParticle();
+				/*
+				if(particleClass == null)
+					particle = new FlxParticle();
+				else
+					particle = new particleClass();
+				*/
+				if(Multiple)
 				{
-                    particle.width *= Collide;
-                    particle.height *= Collide;
-                    particle.centerOffsets();
+					randomFrame = (uint)(FlxG.random()*totalFrames);
+					if(BakedRotations > 0)
+						particle.loadRotatedGraphic(graphics,BakedRotations,(int)randomFrame);
+					else
+					{
+						particle.loadGraphic(graphics,true);
+						particle.Frame = (int)randomFrame;
+					}
 				}
 				else
-                    particle.allowCollisions = FlxObject.NONE;
-                particle.exists = false;
-                add(particle);
+				{
+					if(BakedRotations > 0)
+						particle.loadRotatedGraphic(graphics,BakedRotations);
+					else
+						particle.loadGraphic(graphics);
+				}
+				if(Collide > 0)
+				{
+					particle.Width *= Collide;
+					particle.Height *= Collide;
+					particle.centerOffsets();
+				}
+				else
+					particle.AllowCollisions = FlxObject.None;
+				particle.Exists = false;
+				add(particle);
 				i++;
 			}
-            */
 
 			return this;
 		}
@@ -331,8 +334,6 @@ namespace MonoFlixel
             particle.Elasticity = bounce;
             particle.reset(X - ((int)particle.Width >> 1) + FlxG.random() * Width, Y - ((int)particle.Height >> 1) + FlxG.random() * Height);
             particle.Visible = true;
-
-            // jlorek: revisit
 
             if (minParticleSpeed.X != maxParticleSpeed.X)
             {
