@@ -187,9 +187,48 @@ namespace MonoFlixel
         /// </summary>
         /// <param name="ObjectClass">The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!</param>
         /// <returns>A reference to the object that was created. Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).</returns>
-        public FlxBasic recycle(Object ObjectClass)
-        {
-            throw new NotImplementedException();
+        public FlxBasic recycle(Type objectClass = null)
+		{
+			FlxBasic basic;
+			if(_maxSize > 0)
+			{
+				if(length < _maxSize)
+				{
+					if(objectClass == null)
+						return null;
+					try
+					{
+						return add(Activator.CreateInstance(objectClass) as FlxBasic);
+					}
+					catch(Exception e)
+					{
+						return null;
+					}
+				}
+				else
+				{
+					basic = Members[(int)_marker++];
+					if(_marker >= _maxSize)
+						_marker = 0;
+					return basic;
+				}
+			}
+			else
+			{
+				basic = GetFirstAvailable(objectClass);
+				if(basic != null)
+					return basic;
+				if(objectClass == null)
+					return null;
+				try
+				{
+					return add(Activator.CreateInstance(objectClass) as FlxBasic);
+				}
+				catch(Exception e)
+				{
+					return null;
+				}
+			}
         }
 
         /// <summary>
