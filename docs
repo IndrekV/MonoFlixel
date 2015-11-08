@@ -13,14 +13,14 @@ Fixed classes
 - FlxTile.cs
 - FlxTilemap.cs
 - FlxButton.cs
-- FlxEmitter.cs
++ FlxEmitter.cs
 - FlxGroup.cs
 - FlxParticle.cs
 + FlxPoint.cs
 - FlxS.cs
 - FlxSprite.cs
 - FlxText.cs
-- FlxTileblock.cs
++ FlxTileblock.cs
 - FlxU.cs
 
 // ** SYSTEM ** //
@@ -33,7 +33,7 @@ Fixed classes
 - FlxGame.cs
 - FlxGamepad.cs
 - FlxList.cs
-+ FlxQuadTree.cs
++- FlxQuadTree.cs
 
 // ** PLUGINS ** //
 
