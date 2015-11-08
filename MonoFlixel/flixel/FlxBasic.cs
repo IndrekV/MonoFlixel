@@ -116,7 +116,7 @@ namespace MonoFlixel
 		{
 			/*FlxCamera camera = FlxG._activeCamera;*/
 			if (Cameras == null) {
-				Cameras = FlxG.Cameras;
+				Cameras = FlxG.cameras;
 			}
 			/*
 			if(!cameras.Contains(camera, true))
