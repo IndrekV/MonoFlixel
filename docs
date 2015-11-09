@@ -7,7 +7,7 @@ Fixed classes
 - FlxG.cs
 - FlxObject.cs
 - FlxPath.cs
-- FlxRect.cs
++ FlxRect.cs
 - FlxSound.cs
 - FlxState.cs
 - FlxTile.cs
