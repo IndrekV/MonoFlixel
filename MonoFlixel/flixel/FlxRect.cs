@@ -142,10 +142,10 @@ namespace MonoFlixel
         /// <returns>A reference to the altered rectangle parameter.</returns>
 		public object copyToFlash(Rectangle flashRect)
         {
-			flashRect.X = X;
-			flashRect.Y = Y;
-			flashRect.Width = Width;
-			flashRect.Height = Height;
+			flashRect.X = (int)X;
+			flashRect.Y = (int)Y;
+			flashRect.Width = (int)Width;
+			flashRect.Height = (int)Height;
 			return flashRect;
         }
 

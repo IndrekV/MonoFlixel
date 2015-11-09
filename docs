@@ -21,10 +21,10 @@ Fixed classes
 - FlxSprite.cs
 - FlxText.cs
 + FlxTileblock.cs
-- FlxU.cs
++ FlxU.cs
 
 // ** SYSTEM ** //
-- FlxAnim.cs
++ FlxAnim.cs
 - FlxConsole.cs
 - FlxGameRunner.cs
 - FlxKeyboard.cs
@@ -32,7 +32,7 @@ Fixed classes
 - FlxColor.cs
 - FlxGame.cs
 - FlxGamepad.cs
-- FlxList.cs
++ FlxList.cs
 +- FlxQuadTree.cs
 
 // ** PLUGINS ** //

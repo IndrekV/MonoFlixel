@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 
 namespace MonoFlixel
 {
@@ -370,7 +371,7 @@ namespace MonoFlixel
         /// <param name="displayName">Optional, display your own string instead of the class name + variable name: e.g. "enemy count".</param>
         public static void watch(object anyObject, string variableName, string displayName = null)
         {
-            throw new NotImplementedException("UseMSVSWatchForNow;)");
+            //throw new NotImplementedException("UseMSVSWatchForNow;)");
 
             /*
 			if((_game != null) && (_game._debugger != null))
@@ -808,10 +809,12 @@ namespace MonoFlixel
         /// <returns></returns>
         public static Texture2D createBitmap(uint width, uint height, Color color, bool unique = false, string key = null)
         {
+			/*
             if (unique || !string.IsNullOrEmpty(key))
             {
                 throw new NotSupportedException();
             }
+            */
 
             // we could also use the famous XNA1x1pxWhiteTexture here
             var texture = new Texture2D(FlxS.GraphicsDevice, (int)width, (int)height);

@@ -70,12 +70,12 @@ namespace MonoFlixel
         /**
 		 * Internal tracker for a Flash sound channel object.
 		 */
-		//protected var _channel:SoundChannel;
+		//protected SoundChannel _channel;
 		
         /**
 		 * Internal tracker for a Flash sound transform object.
 		 */
-		//protected var _transform:SoundTransform;
+		//protected SoundTransform _transform;
 
         /// <summary>
         /// Internal tracker for the position in runtime of the music playback.
@@ -159,7 +159,7 @@ namespace MonoFlixel
         /// </summary>
         protected float _fadeInTotal;
 
-        /*
+        
         protected int playCount;
          
         /// <summary>
@@ -176,7 +176,6 @@ namespace MonoFlixel
         /// Internal helper for sound proximity.  The sound will maintain the same position as the target if true.
         /// </summary>
         protected bool _followTarget;
-        */
 
         /// <summary>
         /// The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -243,24 +242,25 @@ namespace MonoFlixel
         /// </summary>
 		override public void update()
 		{
-            base.update();
+			if(_position != 0)
+				return;
 
-            /*
-            if (_source != null)
-            {
-                x = _source.getMidpoint().X;
-                y = _source.getMidpoint().Y;
-            }
-
-            float radial = 1.0f;
-            float fade = 1.0f;
+			float radial = 1.0f;
+			float fade = 1.0f;
 
 			//Distance-based volume control
 			if(_target != null)
 			{
-				radial = (_radius-FlxU.getDistance(_target.getMidpoint(),new FlxPoint(x,y)))/_radius;
+				radial = FlxU.getDistance(new FlxPoint(_target.X,_target.Y),new FlxPoint(x,y))/_radius;
 				if(radial < 0) radial = 0;
 				if(radial > 1) radial = 1;
+
+				if(_pan)
+				{
+					float d = (_target.X-x)/_radius;
+					if(d < -1) d = -1;
+					else if(d > 1) d = 1;
+				}
 			}
 
 			//Cross-fading volume control
@@ -285,12 +285,16 @@ namespace MonoFlixel
 				fade = 1 - fade;
 			}
 
-            if ( (autoDestroy && playCount > 0) && (_sound.State != SoundState.Paused && _sound.State != SoundState.Playing))
-                _sound.Dispose();
-
 			_volumeAdjust = radial*fade;
 			updateTransform();
-            */
+			/*
+			if((_transform.volume > 0) && (_channel != null))
+			{
+				amplitudeLeft = _channel.leftPeak/_transform.volume;
+				amplitudeRight = _channel.rightPeak/_transform.volume;
+				amplitude = (amplitudeLeft+amplitudeRight)*0.5;
+			}
+			*/
 		}
 
         public override void kill()
@@ -310,23 +314,19 @@ namespace MonoFlixel
         /// <param name="looped">Whether or not this sound should loop endlessly.</param>
         /// <param name="autoDestroy">Whether or not this <code>FlxSound</code> instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.play() and FlxG.stream() will set it to true by default.</param>
         /// <returns>This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).</returns>
-		public FlxSound loadEmbedded(SoundEffect embeddedSound, bool looped = false, bool autoDestroy = false)
+		public FlxSound loadEmbedded(string embeddedSound, bool looped = false, bool autoDestroy = false)
         {
 			stop();
 			createSound();
             this.autoDestroy = autoDestroy;
             // NOTE: can't pull ID3 info from embedded sound currently
-            _sound = embeddedSound.CreateInstance();
+			_sound = FlxS.ContentManager.Load<SoundEffectInstance> (embeddedSound);
             _looped = looped;
 			updateTransform();
 			Exists = true;
-
-            // flx# stuff
             _sound.IsLooped = looped;
 
 			return this;
-
-            // flx# - what about autoDestroy?
 		}
 
         /// <summary>
@@ -338,7 +338,21 @@ namespace MonoFlixel
         /// <returns>This <code>FlxSound</code> instance (nice for chaining stuff together, if you're into that).</returns>
         public FlxSound loadStream(string soundUrl, bool looped = false, bool autoDestroy = false)
         {
-            throw new NotImplementedException();
+			stop();
+			createSound();
+			using (var stream = TitleContainer.OpenStream(soundUrl))
+			{
+				var effect = SoundEffect.FromStream(stream);
+				//create the instance
+				_sound = effect.CreateInstance();
+
+
+			}
+			//_sound.addEventListener(Event.ID3, gotID3);
+			_looped = looped;
+			updateTransform();
+			Exists = true;
+			return this;
         }
 
         /// <summary>
