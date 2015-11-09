@@ -126,9 +126,13 @@ namespace MonoFlixel
         /// </summary>
         /// <param name="flashRect">Any <code>Rectangle</code>.</param>
         /// <returns>A reference to itself.</returns>
-        public FlxRect copyFromFlash(object flashRect)
+		public FlxRect copyFromFlash(Rectangle flashRect)
         {
-            throw new NotSupportedException();
+			X = flashRect.X;
+			Y = flashRect.Y;
+			Width = flashRect.Width;
+			Height = flashRect.Height;
+			return this;
         }
 
         /// <summary>
@@ -136,9 +140,13 @@ namespace MonoFlixel
         /// </summary>
         /// <param name="flashRect">Any <code>Rectangle</code>.</param>
         /// <returns>A reference to the altered rectangle parameter.</returns>
-        public object copyToFlash(object flashRect)
+		public object copyToFlash(Rectangle flashRect)
         {
-            throw new NotSupportedException();
+			flashRect.X = X;
+			flashRect.Y = Y;
+			flashRect.Width = Width;
+			flashRect.Height = Height;
+			return flashRect;
         }
 
         /// <summary>
