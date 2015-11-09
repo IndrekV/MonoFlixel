@@ -27,7 +27,7 @@ namespace MonoFlixel
         /// <param name="url">The address of the web page.</param>
         static public void openURL(string url)
         {
-            throw new NotSupportedException();
+			System.Diagnostics.Process.Start(url);
         }
 
         /// <summary>
@@ -37,8 +37,6 @@ namespace MonoFlixel
         /// <returns>The absolute value of that number.</returns>
         public static float abs(float value)
         {
-            //return (value > 0) ? value : -value;
-
             return Math.Abs(value);
         }
 
@@ -49,9 +47,6 @@ namespace MonoFlixel
         /// <returns>The rounded value of that number.</returns>
         public static float floor(float value)
         {
-            //float number = (int) value;
-            //return (value > 0) ? (number) : ((number != value) ? (number - 1) : (number));
-
             return (int) Math.Floor(value);
         }
 
@@ -62,9 +57,6 @@ namespace MonoFlixel
         /// <returns>The rounded value of that number.</returns>
         public static float ceil(float value)
         {
-            //float number = (int) value;
-            //return (value > 0) ? ((number != value) ? (number + 1) : (number)) : (number);
-
             return (int) Math.Ceiling(value);
         }
 
@@ -87,8 +79,6 @@ namespace MonoFlixel
         /// <returns>The smaller of the two numbers.</returns>
         public static float min(float number1, float number2)
         {
-            //return (Number1 <= Number2) ? Number1 : Number2;
-
             return Math.Min(number1, number2);
         }
 
@@ -100,8 +90,6 @@ namespace MonoFlixel
         /// <returns>The larger of the two numbers.</returns>
         public static float max(float number1, float number2)
         {
-            //return (number1 >= number2) ? number1 : number2;
-
             return Math.Max(number1, number2);
         }
 
@@ -127,7 +115,7 @@ namespace MonoFlixel
         /// <returns>A <code>Number</code> between 0 and 1.</returns>
         public static float srand(float seed)
 		{
-			return ((69621 * (seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
+			return FlxU.abs((float) ((69621 * (int) (seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF);
 		}
 
         /// <summary>
@@ -297,7 +285,39 @@ namespace MonoFlixel
         /// <returns>An <code>Array</code> object containing the Red, Green, Blue and Alpha values of the given color.</returns>
         public static Array getHSB(uint color, Array result = null)
         {
-            throw new NotSupportedException("CurrentlyUnusedAndWillLaterBeReplacedBySomeXNAColorSpecificStuff");
+			if(result == null)
+				result = new float[4];
+
+			float red = (float) ((color >> 16) & 0xFF) / 255;
+			float green = (float) ((color >> 8) & 0xFF) / 255;
+			float blue = (float) ((color) & 0xFF) / 255;
+
+			float m = (red > green) ? red : green;
+			float dmax = (m > blue) ? m : blue;
+			m = (red > green) ? green : red;
+			float dmin = (m > blue) ? blue : m;
+			float range = dmax - dmin;
+
+			result[2] = dmax;
+			result[1] = 0;
+			result[0] = 0;
+
+			if(dmax != 0)
+				result[1] = range / dmax;
+			if(result[1] != 0)
+			{
+				if(red == dmax)
+					result[0] = (green - blue) / range;
+				else if(green == dmax)
+					result[0] = 2 + (blue - red) / range;
+				else if(blue == dmax)
+					result[0] = 4 + (red - green) / range;
+				result[0] *= 60;
+				if(result[0] < 0)
+					result[0] += 360;
+			}
+			result[3] = (float) ((color >> 24) & 0xFF) / 255;
+			return result;
         }
 
         /// <summary>
@@ -320,23 +340,6 @@ namespace MonoFlixel
             if (string.IsNullOrEmpty(formatted)) formatted = "0 seconds";
 
             return formatted;
-
-            /*
-			var timeString:String = int(Seconds/60) + ":";
-			var timeStringHelper:int = int(Seconds)%60;
-			if(timeStringHelper < 10)
-				timeString += "0";
-			timeString += timeStringHelper;
-			if(ShowMS)
-			{
-				timeString += ".";
-				timeStringHelper = (Seconds-int(Seconds))*100;
-				if(timeStringHelper < 10)
-					timeString += "0";
-				timeString += timeStringHelper;
-			}
-			return timeString;
-            */
         }
 
         /// <summary>
@@ -376,44 +379,40 @@ namespace MonoFlixel
         /// <returns>A nicely formatted <code>String</code>. Does not include a dollar sign or anything!</returns>
         public static string formatMoney(float amount, bool showDecimal = true, bool englishStyle = true)
         {
-            throw new NotImplementedException();
-
-            /*
-			var helper:int;
-			var amount:int = Amount;
-			var string:String = "";
-			var comma:String = "";
-			var zeroes:String = "";
+			int helper;
+			int Amount = (int) amount;
+			String str = "";
+			String comma = "";
+			String zeroes = "";
 			while(amount > 0)
 			{
-				if((string.length > 0) && comma.length <= 0)
+				if((str.length() > 0) && comma.length() <= 0)
 				{
-					if(EnglishStyle)
+					if(englishStyle)
 						comma = ",";
 					else
 						comma = ".";
 				}
 				zeroes = "";
-				helper = amount - int(amount/1000)*1000;
-				amount /= 1000;
-				if(amount > 0)
+				helper = Amount - (int) (Amount / 1000f) * 1000;
+				Amount /= 1000f;
+				if(Amount > 0)
 				{
 					if(helper < 100)
 						zeroes += "0";
 					if(helper < 10)
 						zeroes += "0";
 				}
-				string = zeroes + helper + comma + string;
+				str = zeroes + helper + comma + str;
 			}
-			if(ShowDecimal)
+			if(showDecimal)
 			{
-				amount = int(Amount*100)-(int(Amount)*100);
-				string += (EnglishStyle?".":",") + amount;
-				if(amount < 10)
-					string += "0";
+				Amount = (int) (amount * 100) - ((int) (amount) * 100);
+				str += (englishStyle ? "." : ",") + Amount;
+				if(Amount < 10)
+					str += "0";
 			}
-			return string;
-            */
+			return str;
         }
 
         /// <summary>
@@ -426,18 +425,10 @@ namespace MonoFlixel
         {
             if (simple)
             {
-                throw new NotSupportedException();
+				return obj.GetType().Name
             }
 
             return obj.GetType().FullName;
-
-            /*
-			var string:String = getQualifiedClassName(Obj);
-			string = string.replace("::",".");
-			if(Simple)
-				string = string.substr(string.lastIndexOf(".")+1);
-			return string;
-            */
         }
 
         /// <summary>
@@ -447,12 +438,8 @@ namespace MonoFlixel
         /// <param name="object2">The second object you want to check.</param>
         /// <returns>Whether they have the same class name or not.</returns>
         public static bool compareClassNames(object object1, object object2)
-        {
-            throw new NotImplementedException();
-
-            /*
-			return getQualifiedClassName(Object1) == getQualifiedClassName(Object2);
-            */
+        {  
+			return getClassName(Object1) == getClassName(Object2);
         }
 
         /// <summary>
@@ -462,11 +449,7 @@ namespace MonoFlixel
         /// <returns>A <code>Class</code> object.</returns>
         public static object getClass(string name)
         {
-            throw new NotImplementedException();
-
-            /*
-            return getDefinitionByName(Name) as Class;
-            */
+			return (object)Type.GetType(name);
         }
 
         /// <summary>
