@@ -75,17 +75,13 @@ namespace MonoFlixel
         /// <summary>
         /// Framerate of the Flash player (NOT the game loop). Default = 30.
         /// </summary>
-        internal uint FlashFramerate
-        {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
-        }
+		internal uint FlashFramerate { get; set; }
 
         /// <summary>
         /// Max allowable accumulation (see _accumulator).
         /// Should always (and automatically) be set to roughly 2x the flash player framerate.
         /// </summary>
-        public uint MaxAccumuation { get; set; }
+        public uint MaxAccumulation { get; set; }
 
         /// <summary>
         /// If a state change was requested, the new state object is stored here until we switch to it.
@@ -125,7 +121,7 @@ namespace MonoFlixel
 		/**
 		 * A handy boolean that keeps track of whether the debugger exists and is currently visible.
 		 */
-		//internal var _debuggerUp:Boolean;
+		internal bool DebuggerUp { get; set; }
 		
 		/**
 		 * Container for a game replay object.
@@ -135,33 +131,33 @@ namespace MonoFlixel
 		/**
 		 * Flag for whether a playback of a recording was requested.
 		 */
-		//internal var _replayRequested:Boolean;
+		internal bool ReplayRequested;
 
 		/**
 		 * Flag for whether a new recording was requested.
 		 */
-		//internal var _recordingRequested:Boolean;
+		internal bool RecordingRequested;
 
 		/**
 		 * Flag for whether a replay is currently playing.
 		 */
-		//internal var _replaying:Boolean;
+		internal bool Replaying;
 
 		/**
 		 * Flag for whether a new recording is being made.
 		 */
-		//internal var _recording:Boolean;
+		internal bool Recording;
 
 		/**
 		 * Array that keeps track of keypresses that can cancel a replay.
 		 * Handy for skipping cutscenes or getting out of attract modes!
 		 */
-		//internal var _replayCancelKeys:Array;
+		internal Array ReplayCancelKeys;
 
 		/**
 		 * Helps time out a replay if necessary.
 		 */
-		//internal var _replayTimer:int;
+		internal int ReplayTimer;
 
 		/**
 		 * This function, if set, is triggered when the callback stops playing.

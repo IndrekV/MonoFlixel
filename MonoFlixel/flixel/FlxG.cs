@@ -407,9 +407,9 @@ namespace MonoFlixel
             {
                 _game.StepMS = (uint)(1000 / value);
 
-                if (_game.MaxAccumuation < _game.StepMS)
+				if (_game.MaxAccumulation < _game.StepMS)
                 {
-                    _game.MaxAccumuation = _game.StepMS;
+					_game.MaxAccumulation = _game.StepMS;
                 }
             }
         }
@@ -628,7 +628,7 @@ namespace MonoFlixel
         /// </summary>
         /// <param name="soundEffect">The sound file you want to loop in the background.</param>
         /// <param name="volume">How loud the sound should be, from 0 to 1.</param>
-        static public void playMusic(SoundEffect soundEffect, float volume = 1.0f)
+        static public void playMusic(string soundEffect, float volume = 1.0f)
         {
             // flx# - Mediaplayer && Song instance here!
 
@@ -657,7 +657,7 @@ namespace MonoFlixel
         /// <param name="autoPlay">Whether to play the sound.</param>
         /// <param name="url">Load a sound from an external web resource instead. Only used if EmbeddedSound = null.</param>
         /// <returns>A <code>FlxSound</code> object.</returns>
-        public static FlxSound loadSound(SoundEffect soundEffect, float volume = 1.0f, bool looped = false, bool autoDestroy = false, bool autoPlay = false, string url = null)
+        public static FlxSound loadSound(string soundEffect, float volume = 1.0f, bool looped = false, bool autoDestroy = false, bool autoPlay = false, string url = null)
         {
             if (!string.IsNullOrEmpty(url))
             {
@@ -685,7 +685,7 @@ namespace MonoFlixel
         /// <param name="looped">Whether to loop this sound.</param>
         /// <param name="autoDestroy">Whether to destroy this sound when it finishes playing. Leave this value set to "false" if you want to re-use this <code>FlxSound</code> instance.</param>
         /// <returns>A <code>FlxSound</code> object.</returns>
-        public static FlxSound play(SoundEffect soundEffect, float volume = 1.0f, bool looped = false, bool autoDestroy = false)
+        public static FlxSound play(string soundEffect, float volume = 1.0f, bool looped = false, bool autoDestroy = false)
         {
             return FlxG.loadSound(soundEffect, volume, looped, autoDestroy, true);
         }
@@ -790,8 +790,8 @@ namespace MonoFlixel
         /// <returns></returns>
         public static bool checkBitmapCache(string key)
         {
-            throw new NotSupportedException();
-
+            //throw new NotSupportedException();
+			return true;
             /*
             return (_cache[Key] != undefined) && (_cache[Key] != null);
             */
