@@ -298,25 +298,25 @@ namespace MonoFlixel
 			float dmin = (m > blue) ? blue : m;
 			float range = dmax - dmin;
 
-			result[2] = dmax;
-			result[1] = 0;
-			result[0] = 0;
+			result.SetValue(dmax, 2);
+			result.SetValue(0, 1);
+			result.SetValue(0, 0);
 
 			if(dmax != 0)
-				result[1] = range / dmax;
-			if(result[1] != 0)
+				result.SetValue((range / dmax), 1);
+			if((int)result.GetValue(1) != 0)
 			{
 				if(red == dmax)
-					result[0] = (green - blue) / range;
+					result.SetValue(((green - blue) / range), 0);
 				else if(green == dmax)
-					result[0] = 2 + (blue - red) / range;
+					result.SetValue((2 + (blue - red) / range), 0);
 				else if(blue == dmax)
-					result[0] = 4 + (red - green) / range;
-				result[0] *= 60;
-				if(result[0] < 0)
-					result[0] += 360;
+					result.SetValue((4 + (red - green) / range), 0);
+				result.SetValue((int)result.GetValue(0)*60, 0);
+				if((int)result.GetValue(0) < 0)
+					result.SetValue((int)result.GetValue(0)+360, 0);
 			}
-			result[3] = (float) ((color >> 24) & 0xFF) / 255;
+			result.SetValue(((float) ((color >> 24) & 0xFF) / 255), 3);
 			return result;
         }
 
@@ -386,7 +386,7 @@ namespace MonoFlixel
 			String zeroes = "";
 			while(amount > 0)
 			{
-				if((str.length() > 0) && comma.length() <= 0)
+				if((str.Length > 0) && comma.Length <= 0)
 				{
 					if(englishStyle)
 						comma = ",";
@@ -395,7 +395,7 @@ namespace MonoFlixel
 				}
 				zeroes = "";
 				helper = Amount - (int) (Amount / 1000f) * 1000;
-				Amount /= 1000f;
+				Amount = (int)(Amount / 1000f);
 				if(Amount > 0)
 				{
 					if(helper < 100)
@@ -425,7 +425,7 @@ namespace MonoFlixel
         {
             if (simple)
             {
-				return obj.GetType().Name
+				return obj.GetType ().Name;
             }
 
             return obj.GetType().FullName;
@@ -439,7 +439,7 @@ namespace MonoFlixel
         /// <returns>Whether they have the same class name or not.</returns>
         public static bool compareClassNames(object object1, object object2)
         {  
-			return getClassName(Object1) == getClassName(Object2);
+			return getClassName(object1) == getClassName(object2);
         }
 
         /// <summary>
