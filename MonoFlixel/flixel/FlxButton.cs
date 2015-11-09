@@ -133,7 +133,7 @@ namespace MonoFlixel.Examples
 				//Label.SetFormat(null, 8, 0x333333, "center");
 				LabelOffset = new FlxPoint(-1, 3);
 			}
-			loadGraphic(FlxS.ContentManager.Load<Texture2D>(ImgDefaultButton), true, false, 80, 20);
+			loadGraphic(ImgDefaultButton, true, false, 80, 20);
 			/*
 			onUp = OnClick;
 

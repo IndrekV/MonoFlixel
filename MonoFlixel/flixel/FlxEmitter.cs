@@ -187,7 +187,7 @@ namespace MonoFlixel
         /// <param name="Collide">The collidability of the particle, 1 = Full and 0 = None</param>
         /// <returns>This FlxEmitter instance (nice for chaining stuff together, if you're into that).</returns>
 		//public FlxEmitter makeParticles(Texture2D graphics, bool Multiple=false, uint Quantity = 50, float Rotation = 1f, float Collide = 0.8f)
-		public FlxEmitter makeParticles(Texture2D graphics, uint Quantity = 50, uint BakedRotations = 0, bool Multiple = false, float Collide = 0.8f)
+		public FlxEmitter makeParticles(string graphics, uint Quantity = 50, uint BakedRotations = 0, bool Multiple = false, float Collide = 0.8f)
         {
 			maxSize = Quantity;
 			uint totalFrames = 0;

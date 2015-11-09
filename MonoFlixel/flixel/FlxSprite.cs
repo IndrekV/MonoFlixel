@@ -11,7 +11,7 @@ namespace MonoFlixel
         /// <summary>
         /// Default image.
         /// </summary>
-        protected static readonly Texture2D ImgDefault = FlxS.ContentManager.Load<Texture2D>("default");
+        protected static readonly string ImgDefault = "default";
 
         /// <summary>
         /// WARNING: The origin of the sprite will default to its center.
@@ -304,7 +304,7 @@ namespace MonoFlixel
         /// <param name="x">The initial X position of the sprite.</param>
         /// <param name="y">The initial Y position of the sprite.</param>
         /// <param name="graphic">The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).</param>
-        public FlxSprite(float x = 0, float y = 0, Texture2D graphic = null)
+        public FlxSprite(float x = 0, float y = 0, string graphic = null)
             : base(x, y)
         {
             Health = 1;
@@ -436,13 +436,15 @@ namespace MonoFlixel
         /// <param name="height">Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).</param>
         /// <param name="unique">Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.</param>
         /// <returns></returns>
-        public FlxSprite loadGraphic(Texture2D graphic, Boolean animated = false, Boolean reverse = false, float width = 0, float height = 0, bool unique = false)
+		public FlxSprite loadGraphic(string graphicFile, Boolean animated = false, Boolean reverse = false, float width = 0, float height = 0, bool unique = false)
         {
+			Texture2D graphic = FlxS.ContentManager.Load<Texture2D> (graphicFile);
+			/*
             if (unique || reverse)
             {
                 throw new NotSupportedException();
             }
-
+			*/
             _bakedRotation = 0;
 
             // flx# - if reversed, addBitmap doubles the texture width and draws
@@ -517,59 +519,79 @@ namespace MonoFlixel
         /// <param name="antiAliasing">Whether to use high quality rotations when creating the graphic.  Default is false.</param>
         /// <param name="autoBuffer">Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.</param>
         /// <returns></returns>
-        public FlxSprite loadRotatedGraphic(Texture2D graphic, uint rotations = 16, int frame = 1, bool antiAliasing = false, bool autoBuffer = false)
+        public FlxSprite loadRotatedGraphic(string graphicFile, uint rotations = 16, int frame = 1, bool antiAliasing = false, bool autoBuffer = false)
         {
-            throw new NotSupportedException("RotationIsPieceOfCakeForMightyXNA");
+			Texture2D graphic = FlxS.ContentManager.Load<Texture2D> (graphicFile);
 
-            /*
+			_bakedRotation = 0;
+			_pixels = FlxG.addBitmap(graphic);
+			if (Frame >= 0) {
+				Width = FrameWidth = _pixels.Height;//  GetRegionHeight();
+				int rx = (int)(Frame * Width);
+				int ry = 0;
+				int fw = _pixels.Width;//getRegionWidth();
+				if (rx >= fw) {
+					ry = (int)((rx / fw) * Width);
+					rx %= fw;
+				}
+				//_pixels.setRegion (rx + _pixels.getRegionX (), ry + _pixels.getRegionY (), (int)Width, (int)Width);
+			} else
+				Width = FrameWidth = _pixels.Width;//.getRegionWidth();
+
+			Height = FrameHeight = _pixels.Height;//getRegionHeight();
+			resetHelpers();
+
+			return this;
+
 			//Create the brush and canvas
-			var rows:uint = Math.sqrt(Rotations);
-			var brush:BitmapData = FlxG.addBitmap(Graphic);
+			/*
+			int rows = Math.sqrt(Rotations);
+			BitmapData brush = FlxG.addBitmap(Graphic);
 			if(Frame >= 0)
 			{
 				//Using just a segment of the graphic - find the right bit here
-				var full:BitmapData = brush;
-				brush = new BitmapData(full.height,full.height);
-				var rx:uint = Frame*brush.width;
-				var ry:uint = 0;
-				var fw:uint = full.width;
+				BitmapData full = brush;
+				brush = new BitmapData(full.Height,full.Height);
+				uint rx = Frame*brush.Width;
+				uint ry = 0;
+				uint fw = full.Width;
 				if(rx >= fw)
 				{
-					ry = uint(rx/fw)*brush.height;
+					ry = (uint)(rx/fw)*brush.Height;
 					rx %= fw;
 				}
-				_flashRect.x = rx;
-				_flashRect.y = ry;
-				_flashRect.width = brush.width;
-				_flashRect.height = brush.height;
+				_flashRect.X = rx;
+				_flashRect.Y = ry;
+				_flashRect.Width = brush.Width;
+				_flashRect.Height = brush.Height;
 				brush.copyPixels(full,_flashRect,_flashPointZero);
 			}
-			
-			var max:uint = brush.width;
-			if(brush.height > max)
-				max = brush.height;
+
+			uint max = brush.Width;
+			if(brush.Height > max)
+				max = brush.Height;
 			if(AutoBuffer)
 				max *= 1.5;
-			var columns:uint = FlxU.ceil(Rotations/rows);
-			width = max*columns;
-			height = max*rows;
-			var key:String = String(Graphic) + ":" + Frame + ":" + width + "x" + height;
-			var skipGen:Boolean = FlxG.checkBitmapCache(key);
-			_pixels = FlxG.createBitmap(width, height, 0, true, key);
-			width = frameWidth = _pixels.width;
-			height = frameHeight = _pixels.height;
+			uint columns = FlxU.ceil(Rotations/rows);
+			Width = max*columns;
+			Height = max*rows;
+			string key = String(graphic) + ":" + Frame + ":" + Width + "x" + Height;
+			bool skipGen = FlxG.checkBitmapCache(key);
+			_pixels = FlxG.createBitmap(Width, Height, 0, true, key);
+			Width = FrameWidth = _pixels.Width;
+			Height = FrameHeight = _pixels.Height;
 			_bakedRotation = 360/Rotations;
-			
+
 			//Generate a new sheet if necessary, then fix up the width and height
 			if(!skipGen)
 			{
-				var row:uint = 0;
-				var column:uint;
-				var bakedAngle:Number = 0;
-				var halfBrushWidth:uint = brush.width*0.5;
-				var halfBrushHeight:uint = brush.height*0.5;
-				var midpointX:uint = max*0.5;
-				var midpointY:uint = max*0.5;
+				int row = 0;
+				int column;
+				int bakedAngle = 0;
+				int halfBrushWidth = brush.Width*0.5;
+				int halfBrushHeight = brush.Height*0.5;
+				int midpointX = max*0.5;
+				int midpointY = max*0.5;
 				while(row < rows)
 				{
 					column = 0;
@@ -587,16 +609,16 @@ namespace MonoFlixel
 					row++;
 				}
 			}
-			frameWidth = frameHeight = width = height = max;
+			FrameWidth = FrameHeight = Width = Height = max;
 			resetHelpers();
 			if(AutoBuffer)
 			{
-				width = brush.width;
-				height = brush.height;
+				Width = brush.Width;
+				Height = brush.Height;
 				centerOffsets();
 			}
 			return this;
-            */
+			*/
         }
 
         /// <summary>

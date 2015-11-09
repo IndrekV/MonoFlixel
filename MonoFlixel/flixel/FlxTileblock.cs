@@ -47,7 +47,7 @@ namespace MonoFlixel
 
 			//First create a tile brush
 			FlxSprite sprite = new FlxSprite();
-			sprite.loadGraphic(FlxS.ContentManager.Load<Texture2D>(TileGraphic), true, false, TileWidth, TileHeight);
+			sprite.loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
 			uint spriteWidth = (uint)sprite.Width;
 			uint spriteHeight = (uint)sprite.Height;
 			uint total = sprite.Frames + Empties;
@@ -65,9 +65,9 @@ namespace MonoFlixel
 				regen = true;
 			}
 			if(regen)
-				makeGraphic((uint)Width,(uint)Height,Color.Black,true);
+				makeGraphic((uint)Width,(uint)Height,Color.Green,true);
 			else
-				this.fill(Color.Black);
+				this.fill(Color.Green);
 
 			//Stamp random tiles onto the canvas
 			uint row = 0;
