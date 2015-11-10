@@ -62,4 +62,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Content\poweredby.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\xna_tiles.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Content\deffont.xnb" />
+  </ItemGroup>
 </Project>

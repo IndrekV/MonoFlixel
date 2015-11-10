@@ -1213,7 +1213,7 @@ namespace MonoFlixel
             FlxG.mute = false;
             FlxG.sounds = new FlxGroup();
             FlxG.worldBounds = new FlxRect();
-            FlxG.defaultFont = FlxS.ContentManager.Load<SpriteFont>("ConsoleFont");
+            FlxG.defaultFont = FlxS.ContentManager.Load<SpriteFont>("deffont");
             //FlxG.zoom = 1f;
             FlxG.pad1 = new FlxGamepad(PlayerIndex.One);
             FlxG.pad2 = new FlxGamepad(PlayerIndex.Two);
