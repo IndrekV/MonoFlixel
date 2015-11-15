@@ -11,6 +11,7 @@ using MonoFlixel;
 
 namespace MonoFlixel.Examples
 {
+	public delegate void FlxButtonClick();
 
 	/**
 	 * A simple button class that calls a function when clicked by the mouse.
@@ -20,7 +21,7 @@ namespace MonoFlixel.Examples
 	 */
 	public class FlxButton : FlxSprite
 	{
-		static protected String ImgDefaultButton = "org/flixel/data/pack:button";
+		static protected String ImgDefaultButton = "MonoFlixel/button";
 
 		/**
 		 * Used with public variable <code>Status</code>, means not Highlighted or
@@ -97,25 +98,17 @@ namespace MonoFlixel.Examples
 		/**
 		 * Tracks whether or not the button is currently Pressed.
 		 */
-		protected Boolean _Pressed;
+		protected Boolean _pressed;
 		/**
 		 * Whether or not the button has initialized itself yet.
 		 */
 		private Boolean _initialized;
 
-		/**
-		 * Internal event listener.
-		 */
-		/*
-		private const IEventListener mouseUpListener = new IEventListener()
-		{
-			
-			public void onEvent(Event e)
-			{
-				onMouseUp((MouseEvent) e);
-			}
-		};
-		*/
+		/// <summary>
+		/// This function is called when the button is clicked.
+		/// </summary>
+		protected FlxButtonClick _callback;
+
 		/**
 		 * Creates a new <code>FlxButton</code> object with a gray background and a
 		 * callback function on the UI thread.
@@ -125,15 +118,16 @@ namespace MonoFlixel.Examples
 		 * @param Label The text that you want to appear on the button.
 		 * @param OnClick The function to call whenever the button is clicked.
 		 */
-		public FlxButton(float x = 0, float y = 0, String label = null, Func<FlxObject, FlxObject, Boolean> OnClick = null) : base(x, y)
+		public FlxButton(float x = 0, float y = 0, String label = null, FlxButtonClick Callback = null) : base(x, y)
 		{
-			if(Label != null)
+			if(label != null)
 			{
-				//Label = new FlxText(0, 0, 80, Label);
-				//Label.SetFormat(null, 8, 0x333333, "center");
+				Label = new FlxText(x-1, y+3, 80, label);
+				Label.setFormat(null, 8, new Color(0x33,0x33,0x33), "center", Color.Transparent);
 				LabelOffset = new FlxPoint(-1, 3);
 			}
 			loadGraphic(ImgDefaultButton, true, false, 80, 20);
+			_callback = Callback;
 			/*
 			onUp = OnClick;
 
@@ -148,7 +142,7 @@ namespace MonoFlixel.Examples
 
 			Status = Normal;
 			_onToggle = false;
-			_Pressed = false;
+			_pressed = false;
 			_initialized = false;
 		}
 		
@@ -158,6 +152,10 @@ namespace MonoFlixel.Examples
 			if(FlxG.getStage() != null)
 				FlxG.getStage().removeEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
 			*/
+
+			if (FlxG.mouse != null)
+				FlxG.mouse.removeMouseListener(OnMouseUp);
+
 			if(Label != null)
 			{
 				Label.destroy();
@@ -186,13 +184,12 @@ namespace MonoFlixel.Examples
 			base.preUpdate();
 			if(!_initialized)
 			{
-				/*
-				if(FlxG.getStage() != null)
+				if (!_initialized)
 				{
-					FlxG.getStage().addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
+					if (FlxG.State == null) return;
+					FlxG.mouse.addMouseListener(OnMouseUp);
 					_initialized = true;
 				}
-				*/
 				_initialized = true;
 			}
 		}
@@ -210,9 +207,11 @@ namespace MonoFlixel.Examples
 			{
 			case Highlight: // Extra behavior to accommodate checkbox logic.
 				Label.Alpha = 1.0f;
+				Console.Write ("Highlighted");
 				break;
 			case Pressed:
 				Label.Alpha = 0.5f;
+				Console.Write ("Pressed");
 				Label.Y++;
 				break;
 			case Normal:
@@ -232,8 +231,8 @@ namespace MonoFlixel.Examples
 
 			// Figure out if the button is Highlighted or Pressed or what
 			// (ignore checkbox behavior for now).
-			/*
-			if(FlxG.Mouse.GetVisible())
+
+			if(FlxG.mouse.cursor.Visible)
 			{
 				if(Cameras == null)
 					Cameras = FlxG.cameras;
@@ -241,7 +240,8 @@ namespace MonoFlixel.Examples
 				int i = 0;
 				int l = Cameras.Count;
 				int pointerId = 0;
-				int totalPointers = /*FlxG.mouse.ActivePointers + 1;
+				//int totalPointers = FlxG.mouse.ActivePointers + 1;
+				int totalPointers = 2;
 				Boolean offAll = true;
 				while(i < l)
 				{
@@ -252,10 +252,11 @@ namespace MonoFlixel.Examples
 						if(overlapsPoint(_tagPoint, true, Camera))
 						{
 							offAll = false;
-							if(FlxG.mouse.Pressed(pointerId))
+							if(FlxG.mouse.pressed())
 							{
 								Status = Pressed;
-								if(FlxG.mouse.JustPressed(pointerId))
+								//if(FlxG.mouse.justPressed(pointerId))
+								if(FlxG.mouse.justPressed())
 								{
 									/*
 									if(OnDown != null)
@@ -264,7 +265,7 @@ namespace MonoFlixel.Examples
 									}
 									if(SoundDown != null)
 										SoundDown.Play(true);
-
+									*/
 								}
 							}
 
@@ -276,6 +277,7 @@ namespace MonoFlixel.Examples
 									OnOver.Callback();
 								if(SoundOver != null)
 									SoundOver.Play(true);
+								*/
 
 							}
 						}
@@ -292,6 +294,7 @@ namespace MonoFlixel.Examples
 
 						if(SoundOut != null)
 							SoundOut.Play(true);
+						*/
 
 					}
 					Status = Normal;
@@ -316,7 +319,7 @@ namespace MonoFlixel.Examples
 				Frame = Normal;
 			else
 				Frame = Status;
-				*/
+
 		}
 
 		/**
@@ -385,16 +388,25 @@ namespace MonoFlixel.Examples
 		 * Internal function for handling the actual callback call (for UI thread
 		 * dependent calls like <code>FlxU.openURL()</code>).
 		 */
-		/*
-		protected void OnMouseUp(MouseEvent e)
+
+		protected void OnMouseUp(object Sender, FlxMouseEvent MouseEvent)
 		{
+			/*
 			if(!Exists || !Visible || !Active || (Status != Pressed))
 				return;
 			if(OnUp != null)
 				OnUp.Callback();
 			if(SoundUp != null)
 				SoundUp.Play(true);
+			*/
+			if (!Exists || !Visible || !Active || !FlxG.mouse.justReleased() || /*(FlxG.pause && !pauseProof) || */(_callback == null)) return;
+
+			if (overlapsPoint(new FlxPoint (FlxG.mouse.x, FlxG.mouse.y)) /*&& _counter > 0.5f*/)
+			{
+				Console.WriteLine("calling back from mouse press");
+				//on = true;
+				_callback();
+			}
 		}
-		*/
 	}
 }
