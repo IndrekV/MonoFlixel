@@ -248,8 +248,8 @@ namespace MonoFlixel.Examples
 					Camera = Cameras[i++];
 					while(pointerId < totalPointers)
 					{
-						//FlxG.mouse.GetWorldPosition(pointerId, Camera, _tagPoint);
-						if(overlapsPoint(_tagPoint, true, Camera))
+						FlxPoint p = new FlxPoint(FlxG.mouse.cursor.X, FlxG.mouse.cursor.Y);
+						if(overlapsPoint(p, true, Camera))
 						{
 							offAll = false;
 							if(FlxG.mouse.pressed())
@@ -315,7 +315,7 @@ namespace MonoFlixel.Examples
 			}
 
 			// Then pick the appropriate frame of animation
-			if((Status == Highlight) && (_onToggle || FlxG.mobile))
+			if((Status == Highlight) && (_onToggle /*|| FlxG.mobile*/))
 				Frame = Normal;
 			else
 				Frame = Status;
