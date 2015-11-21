@@ -127,11 +127,7 @@ namespace MonoFlixel
 			{
 				while (!reader.EndOfStream)
 				{
-					if (CsvData.Length != 0)
-						CsvData += ",";
-					CsvData += reader.ReadLine();
-
-					// do your thing
+					CsvData += reader.ReadLine() + "\n";
 				}
 			}
 			return loadMap(CsvData, Graphic, TileWidth, TileHeight, DrawIndex, CollideIndex);
