@@ -129,6 +129,7 @@ namespace MonoFlixel
 				{
 					CsvData += reader.ReadLine() + "\n";
 				}
+				stream.Dispose ();
 			}
 			return loadMap(CsvData, Graphic, TileWidth, TileHeight, DrawIndex, CollideIndex);
 		}
