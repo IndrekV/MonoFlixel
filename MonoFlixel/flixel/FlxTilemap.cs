@@ -15,66 +15,66 @@ using MonoFlixel;
 
 namespace MonoFlixel
 {
-    public class FlxTilemap : FlxObject
-    {
+	public class FlxTilemap : FlxObject
+	{
 		static public String ImgAuto = "autotiles";
 		static public String ImgAutoAlt = "autotiles_alt";
 
-        public const uint OFF = 0;
-        public const uint AUTO = 1;
-        public const uint ALT = 2;
-        public uint auto;
-        int widthInTiles;
-        int heightInTiles;
-        int totalTiles;
+		public const uint OFF = 0;
+		public const uint AUTO = 1;
+		public const uint ALT = 2;
+		public uint auto;
+		public int widthInTiles;
+		int heightInTiles;
+		int totalTiles;
 
-        public Texture2D tileGraphic;
-        protected Texture2D _tiles;   // reference to tile graphics
-        protected List<int> _data;
-        protected Rectangle[] _rects;
-        protected int _tileWidth;
-        protected int _tileHeight;
-        protected int tileSize;
+		public Texture2D tileGraphic;
+		protected Texture2D _tiles;   // reference to tile graphics
+		protected int[] _data;
+		protected Rectangle[] _rects;
+		protected int _tileWidth;
+		protected int _tileHeight;
+		protected int tileSize;
 
-        protected FlxObject _block;
+		protected FlxObject _block;
 
-        protected List<FlxTile> _tileObjectsForDrawing;
-        protected FlxTile[] _tileObjects;
+		protected List<FlxTile> _tileObjectsForDrawing;
+		protected FlxTile[] _tileObjects;
 
-        protected uint _startingIndex;
-        protected int collideIndex;
+		protected uint _startingIndex;
+		protected int collideIndex;
 
-        public FlxTilemap()
-            : base()
-        {
-            auto = OFF;
+		public FlxTilemap()
+			: base()
+		{
+			auto = OFF;
 
-            widthInTiles = 0;
-            heightInTiles = 0;
-            totalTiles = 0;
+			widthInTiles = 0;
+			heightInTiles = 0;
+			totalTiles = 0;
 
-            tileGraphic = null;
-            _rects = null;
-            _tiles = null;
-            _tileObjectsForDrawing = new List<FlxTile>();
-            _tileObjects = null;
-            
+			tileGraphic = null;
+			_rects = null;
+			_tiles = null;
+			_tileObjectsForDrawing = new List<FlxTile>();
+			_tileObjects = null;
 
-            _tileWidth = 0;
-            _tileHeight = 0;
 
-            Immovable = true;
+			_tileWidth = 0;
+			_tileHeight = 0;
 
-            _block = new FlxObject();
-            _block.Width = _block.Height = 0;
-            _block.Immovable = true;
+			Immovable = true;
 
-            _startingIndex = 0;
-            collideIndex = 1;
+			_block = new FlxObject();
+			_block.Width = _block.Height = 0;
+			_block.Immovable = true;
 
-            AllowCollisions = Any;
-            ID = 3;
-        }
+			_startingIndex = 0;
+			collideIndex = 1;
+
+			AllowCollisions = Any;
+			ID = 3;
+		}
 
 		/**
 	 * Converts a one-dimensional array of tile data to a comma-separated
@@ -120,328 +120,485 @@ namespace MonoFlixel
 			return csv.ToString ();
 		}
 
-        public FlxTilemap loadMap(String CSVdataFile, String Graphic, int TileWidth, int TileHeight, uint DrawIndex = 0, int CollideIndex = 1)
-        {
-            collideIndex = CollideIndex;
-            //_tileWidth = _tileHeight = tileSize = TileSize;
+		public FlxTilemap loadMapFile(String CSVdataFile, String Graphic, int TileWidth, int TileHeight, uint DrawIndex = 0, int CollideIndex = 1) {
+			string CsvData = "";
+			using (var stream = TitleContainer.OpenStream("Content/" + CSVdataFile))
+			using (var reader = new StreamReader(stream))
+			{
+				while (!reader.EndOfStream)
+				{
+					if (CsvData.Length != 0)
+						CsvData += ",";
+					CsvData += reader.ReadLine();
 
-            //StreamReader stream = new StreamReader(TitleContainer.OpenStream(CSVdataFile));
-            //CSVdataFile = stream.ReadToEnd();
+					// do your thing
+				}
+			}
+			return loadMap(CsvData, Graphic, TileWidth, TileHeight, DrawIndex, CollideIndex);
+		}
 
-            String[] columns;
-            String[] rows = new String[] { };
-            rows = CSVdataFile.Split('\n');
+		public FlxTilemap loadMap(String CSVdataFile, String Graphic, int TileWidth, int TileHeight, uint DrawIndex = 0, int CollideIndex = 1)
+		{
+			collideIndex = CollideIndex;
+			//_tileWidth = _tileHeight = tileSize = TileSize;
 
-            heightInTiles = rows.Length;
-            _data = new List<int>();
+			//StreamReader stream = new StreamReader(TitleContainer.OpenStream(CSVdataFile));
+			//CSVdataFile = stream.ReadToEnd();
 
-            int row = 0;
-            int column;
-            while (row < heightInTiles)
-            {
-                columns = rows[row++].Split(',');
-                if (columns.Length <= 1)
-                {
-                    heightInTiles = heightInTiles - 1;
-                    continue;
-                }
-                if (widthInTiles == 0)
-                    widthInTiles = columns.Length;
-                column = 0;
-                while (column < widthInTiles)
-                    _data.Add(Convert.ToInt32(columns[column++]));
-            }
+			String[] columns;
+			String[] rows = new String[] { };
+			rows = CSVdataFile.Split('\n');
 
-            totalTiles = heightInTiles * widthInTiles;
+			heightInTiles = rows.Length;
+			_data = new int[heightInTiles*(rows[0].Split(',').Length)];
+
+			int row = 0;
+			int column;
+			int counter = 0;
+			while (row < heightInTiles)
+			{
+				columns = rows[row++].Split(',');
+				if (columns.Length <= 1)
+				{
+					heightInTiles = heightInTiles - 1;
+					continue;
+				}
+				if (widthInTiles == 0)
+					widthInTiles = columns.Length;
+				column = 0;
+				while (column < widthInTiles) {
+					if (columns [column].Length > 0) {
+						_data [counter++] = Convert.ToInt32 (columns [column++]);
+					}
+				}
+			}
+
+			totalTiles = heightInTiles * widthInTiles;
 
 			tileGraphic = _tiles = FlxS.ContentManager.Load<Texture2D>(Graphic);
-            _tileWidth = TileWidth;
-            if (_tileWidth == 0)
-                _tileWidth = _tiles.Height;
-            _tileHeight = TileHeight;
-            if (_tileHeight == 0)
-                _tileHeight = _tileWidth;
+			_tileWidth = TileWidth;
+			if (_tileWidth == 0)
+				_tileWidth = _tiles.Height;
+			_tileHeight = TileHeight;
+			if (_tileHeight == 0)
+				_tileHeight = _tileWidth;
 
-            //create some tile objects that we'll use for overlap checks, one for each tile
-            uint i = 0;
-            uint l = (uint)(_tiles.Width / _tileWidth) * (uint)(_tiles.Height / _tileHeight);
-            //_tileObjects = new List<FlxTile>
-            _tileObjects = new FlxTile[l];
+			//create some tile objects that we'll use for overlap checks, one for each tile
+			uint i = 0;
+			uint l = (uint)(_tiles.Width / _tileWidth) * (uint)(_tiles.Height / _tileHeight);
+			//_tileObjects = new List<FlxTile>
+			_tileObjects = new FlxTile[l];
 
-            //FlxG.log("size " + l);
+			//FlxG.log("size " + l);
 
-            while (i < l)
-            {
-                //                           (FlxTilemap Tilemap, int Tx, int Ty, int Index, int Width, int Height, Boolean Visible, uint AllowCollisions)
-                _tileObjects[i] = new FlxTile(this, 0, 0, (int)i, _tileWidth, _tileHeight, (i >= DrawIndex), (i >= CollideIndex) ? AllowCollisions : None);
-                i++;
-            }
-
-            
-
-            Width = widthInTiles * _tileWidth;
-            Height = heightInTiles * _tileHeight;
-            _rects = new Rectangle[totalTiles];
-
-            //create the actual map
-            i = 0;
-            while (i < totalTiles)
-                updateTile((int)i++);
+			while (i < l)
+			{
+				//                           (FlxTilemap Tilemap, int Tx, int Ty, int Index, int Width, int Height, Boolean Visible, uint AllowCollisions)
+				_tileObjects[i] = new FlxTile(this, 0, 0, (int)i, _tileWidth, _tileHeight, (i >= DrawIndex), (i >= CollideIndex) ? AllowCollisions : None);
+				i++;
+			}
 
 
 
+			Width = widthInTiles * _tileWidth;
+			Height = heightInTiles * _tileHeight;
+			_rects = new Rectangle[totalTiles];
 
-            int ty = 0;
-            int tx = 0;
-            int index = 0;
-            for (ty = 0; ty < heightInTiles; ty++)
-            {
-                for (tx = 0; tx < widthInTiles; tx++)
-                {
-                    FlxTile _temp = new FlxTile(this, tx, ty, (int)_data[index], _tileWidth, _tileHeight, (_data[index] >= DrawIndex) ? true : false, (_data[index] >= CollideIndex) ? AllowCollisions : None);
-                    _tileObjectsForDrawing.Add(_temp);
-
-                    
-
-
-                    //if (_data[index] >= CollideIndex)
-                    //{
-                    //    FlxSprite _newTile = new FlxSprite(tx * _tileWidth, ty * _tileHeight);
-                    //    _newTile.makeGraphic(_temp.width, _temp.height, FlxColor.BLUE);
-                    //    _newTile.solid = _newTile.immovable = true;
-                    //    _temp.solid = true;
-                    //    add(_newTile);
-                    //}
-
-                    if (index < totalTiles)
-                        index++;
-                }
-            }
-
-            
-
-            return this;
-        }
-
-        protected void drawTilemap(FlxCamera Camera)
-        {
-            //no need because draw() actually renders the tilemap
-        }
-
-        public override void draw()
-        {
-            foreach (FlxTile t in _tileObjectsForDrawing)
-            {
-                //t.tileGraphicSectionToDraw = new Rectangle((int)t.index * (int)t.tileSize, 0, (int)t.width, (int)t.height);
-                //if (t.visible)
-                //    FlxG.spriteBatch.Draw(_tiles, t.drawPosition, t.tileGraphicSectionToDraw, FlxColor.WHITE);
-                t.draw();
-            }
-            //foreach (FlxSprite s in members)
-            //{
-            //    s.draw();
-            //}
-        }
-
-        // getData
-
-        // setDirty
-
-        // findPath
-
-        // simplifyPath
-
-        // raySimplifyPath
-
-        // computePathDistance
-
-        // walkPath
-
-        override public Boolean overlaps(FlxBasic objectOrGroup, Boolean inScreenSpace = false, FlxCamera camera = null)
-        {
-            if (objectOrGroup is FlxGroup)
-            {
-                Boolean results = false;
-                FlxBasic basic;
-                int i = 0;
-                List<FlxBasic> members = new List<FlxBasic>();
-                members = (objectOrGroup as FlxGroup).Members;
-                while (i < members.Count)
-                {
-                    basic = members[i++] as FlxBasic;
-                    if (basic is FlxObject)
-                    {
-                        if (overlapsWithCallback(basic as FlxObject))
-                        results = true;
-                    }
-                    else
-                    {
-                        if (overlaps(basic, inScreenSpace, camera))
-                            results = true;
-                    }
-                }
-                return results;
-            }
-            else if (objectOrGroup is FlxObject)
-            {
-                return overlapsWithCallback(objectOrGroup as FlxObject);
-            }
-            return false;
-        }
-
-        // overlapsWithCallBack
-        public Boolean overlapsWithCallback(FlxObject Object, Func<FlxObject, FlxObject, Boolean> Callback=null, Boolean FlipCallbackParams=false, FlxPoint Position=null)
-        {
-            Boolean results = false;
-
-            float X = base.X;
-            float Y = base.Y;
-            if (Position != null)
-            {
-                X = Position.X;
-                Y = Position.X;
-            }
-
-            //Figure out what tiles we need to check against
-            int selectionX = (int)FlxU.floor((Object.X - X) / _tileWidth);
-            int selectionY = (int)FlxU.floor((Object.Y - Y) / _tileHeight);
-            uint selectionWidth = (uint)(selectionX + (FlxU.ceil((int)Object.Width / _tileWidth)) + 2);
-            uint selectionHeight = (uint)(selectionY + (FlxU.ceil((int)Object.Height / _tileHeight)) + 2);
-
-            //Then bound these coordinates by the map edges
-            if (selectionX < 0)
-                selectionX = 0;
-            if (selectionY < 0)
-                selectionY = 0;
-            if (selectionWidth > widthInTiles)
-                selectionWidth = (uint)widthInTiles;
-            if (selectionHeight > heightInTiles)
-                selectionHeight = (uint)heightInTiles;
-
-            //Then loop through this selection of tiles and call FlxObject.separate() accordingly
-            uint rowStart = (uint)selectionY * (uint)widthInTiles;
-            uint row = (uint)selectionY;
-            uint column;
-            FlxTile tile;
-            Boolean overlapFound;
-            float deltaX = X - Last.X;
-            float deltaY = Y - Last.Y;
-
-           
-
-            while (row < selectionHeight)
-            {
-                column = (uint)selectionX;
-                while (column < selectionWidth)
-                {
-                    overlapFound = false;
-                    tile = _tileObjects[(int)_data[(int)(rowStart+column)]] as FlxTile;
-                    if ( Convert.ToBoolean(tile.AllowCollisions) )
-                    {
-                        tile.X = X + (int)column * _tileWidth;
-                        tile.Y = Y + (int)row * _tileHeight;
-                        tile.Last.X = tile.X - deltaX;
-                        tile.Last.Y = tile.Y - deltaY;
-                        if (Callback != null)
-                        {
-                            if (FlipCallbackParams)
-                                overlapFound = Callback(Object, tile);
-                            else
-                                overlapFound = Callback(tile, Object);
-                        }
-                        else
-                        {
-                            overlapFound = (Object.X + Object.Width > tile.X) && (Object.X < tile.X + tile.Width) && (Object.Y + Object.Height > tile.Y) && (Object.Y < tile.Y + tile.Height);
-                        }
-                        if (overlapFound)
-                        {
-                            if ((tile.callback != null))
-                            {
-                                tile.mapIndex = (uint)rowStart + column;
-                                tile.callback(tile, Object);
-                            }
-                            results = true;
-                        }
-                    }
-                    else if ((tile.callback != null))
-                    {
-                        tile.mapIndex = (uint)rowStart + (uint)column;
-                        tile.callback(tile, Object);
-                    }
-                    column++;
-                }
-                rowStart += (uint)widthInTiles;
-                row++;
-            }
-            return results;
-        }
-
-
-        // overlapsPoint
-        override public Boolean overlapsPoint(FlxPoint point, Boolean inScreenSpace = false, FlxCamera camera = null)
-        {
-            if (!inScreenSpace)
-                return (_tileObjects[_data[(int)(((point.Y - Y) / _tileHeight) * widthInTiles + (point.X - X) / _tileWidth)]] as FlxTile).AllowCollisions > 0;
-
-            if (camera == null)
-                camera = FlxG.camera;
-            point.X = point.X - camera.Scroll.X;
-            point.Y = point.Y - camera.Scroll.Y;
-            getScreenXY(_tagPoint, camera);
-            return (_tileObjects[_data[(int)(((point.Y - _tagPoint.Y) / _tileHeight) * widthInTiles + (point.X - _tagPoint.X) / _tileWidth)]] as FlxTile).AllowCollisions > 0;
-        }
-
-
-        protected void updateTile(int Index)
-        {
-            FlxTile tile = _tileObjects[_data[Index]] as FlxTile;
-            if ((tile == null) || !tile.Visible)
-            {
-                _rects[Index] = Rectangle.Empty;
-                return;
-            }
-            int rx = (int)(_data[Index] - _startingIndex) * _tileWidth;
-            int ry = 0;
-            if (rx >= _tiles.Width)
-            {
-                ry = (rx / _tiles.Width) * _tileHeight;
-                rx %= _tiles.Width;
-            }
-            _rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
-        }
+			//create the actual map
+			i = 0;
+			while (i < totalTiles)
+				updateTile((int)i++);
 
 
 
-        public void follow(FlxCamera Camera = null, int Border = 0, Boolean UpdateWorld = false)
-        {
-            if (Camera == null)
-                Camera = FlxG.camera;
-            Camera.setBounds(X + Border * tileSize, Y + Border * tileSize, Width - Border * tileSize * 2, Height - Border * tileSize * 2, UpdateWorld);
-        }
 
-        public int getTile(int X, int Y)
-        {
-            int i = (Y * widthInTiles + X);
-            return (int)_data[i];
-        }
+			int ty = 0;
+			int tx = 0;
+			int index = 0;
+			for (ty = 0; ty < heightInTiles; ty++)
+			{
+				for (tx = 0; tx < widthInTiles; tx++)
+				{
+					FlxTile _temp = new FlxTile(this, tx, ty, (int)_data[index], _tileWidth, _tileHeight, (_data[index] >= DrawIndex) ? true : false, (_data[index] >= CollideIndex) ? AllowCollisions : None);
+					_tileObjectsForDrawing.Add(_temp);
 
 
-        public void setTileProperties(uint Tile, uint AllowCollisions = 0x1111, Action<FlxTile, FlxObject> Callback = null, uint Range = 1)
-        {
-            if (Range <= 0)
-                Range = 1;
-            FlxTile tile;
-            uint i = Tile;
-            uint l = Tile + Range;
-            while (i < l)
-            {
-                tile = _tileObjects[(int)i++] as FlxTile;
-                tile.AllowCollisions = AllowCollisions;
-                tile.callback = Callback;
-            }
-        }
 
-        /**
+
+					//if (_data[index] >= CollideIndex)
+					//{
+					//    FlxSprite _newTile = new FlxSprite(tx * _tileWidth, ty * _tileHeight);
+					//    _newTile.makeGraphic(_temp.width, _temp.height, FlxColor.BLUE);
+					//    _newTile.solid = _newTile.immovable = true;
+					//    _temp.solid = true;
+					//    add(_newTile);
+					//}
+
+					if (index < totalTiles)
+						index++;
+				}
+			}
+
+
+
+			return this;
+		}
+
+		protected void drawTilemap(FlxCamera Camera)
+		{
+			//no need because draw() actually renders the tilemap
+		}
+
+		public override void draw()
+		{
+			foreach (FlxTile t in _tileObjectsForDrawing)
+			{
+				//t.tileGraphicSectionToDraw = new Rectangle((int)t.index * (int)t.tileSize, 0, (int)t.width, (int)t.height);
+				//if (t.visible)
+				//    FlxG.spriteBatch.Draw(_tiles, t.drawPosition, t.tileGraphicSectionToDraw, FlxColor.WHITE);
+				t.draw();
+			}
+			//foreach (FlxSprite s in members)
+			//{
+			//    s.draw();
+			//}
+		}
+
+		/**
+		 * Fetches the tilemap data array.
+		 * 
+		 * @param	Simple		If true, returns the data as copy, as a series of 1s and 0s (useful for auto-tiling stuff). Default value is false, meaning it will return the actual data array (NOT a copy).
+		 * 
+		 * @return	An array the size of the tilemap full of integers indicating tile placement.
+		 */
+		public int[] getData(Boolean Simple=false)
+		{
+			if(!Simple)
+				return _data;
+
+			int i = 0;
+			int l = _data.Length;
+			int [] data = new int[l];
+			while(i < l)
+			{
+				data[i] = ((_tileObjectsForDrawing[_data[i]] as FlxTile).AllowCollisions > 0)?1:0;
+				i++;
+			}
+			return data;
+		}
+
+		/**
+		 * Set the dirty flag on all the tilemap buffers.
+		 * Basically forces a reset of the drawn tilemaps, even if it wasn'tile necessary.
+		 * 
+		 * @param	Dirty		Whether to flag the tilemap buffers as dirty or not.
+		 */
+		public void setDirty(Boolean Dirty=true)
+		{
+			int i = 0;
+			/*
+			int l = _buffers.Length;
+			while(i < l)
+				(_buffers[i++] as FlxTilemapBuffer).dirty = Dirty;
+				*/
+		}
+
+		// findPath
+
+		// simplifyPath
+
+		// raySimplifyPath
+
+		// computePathDistance
+
+		// walkPath
+
+		override public Boolean overlaps(FlxBasic objectOrGroup, Boolean inScreenSpace = false, FlxCamera camera = null)
+		{
+			if (objectOrGroup is FlxGroup)
+			{
+				Boolean results = false;
+				FlxBasic basic;
+				int i = 0;
+				List<FlxBasic> members = new List<FlxBasic>();
+				members = (objectOrGroup as FlxGroup).Members;
+				while (i < members.Count)
+				{
+					basic = members[i++] as FlxBasic;
+					if (basic is FlxObject)
+					{
+						if (overlapsWithCallback(basic as FlxObject))
+							results = true;
+					}
+					else
+					{
+						if (overlaps(basic, inScreenSpace, camera))
+							results = true;
+					}
+				}
+				return results;
+			}
+			else if (objectOrGroup is FlxObject)
+			{
+				return overlapsWithCallback(objectOrGroup as FlxObject);
+			}
+			return false;
+		}
+
+		// overlapsWithCallBack
+		public Boolean overlapsWithCallback(FlxObject Object, Func<FlxObject, FlxObject, Boolean> Callback=null, Boolean FlipCallbackParams=false, FlxPoint Position=null)
+		{
+			Boolean results = false;
+
+			float X = base.X;
+			float Y = base.Y;
+			if (Position != null)
+			{
+				X = Position.X;
+				Y = Position.X;
+			}
+
+			//Figure out what tiles we need to check against
+			int selectionX = (int)FlxU.floor((Object.X - X) / _tileWidth);
+			int selectionY = (int)FlxU.floor((Object.Y - Y) / _tileHeight);
+			uint selectionWidth = (uint)(selectionX + (FlxU.ceil((int)Object.Width / _tileWidth)) + 2);
+			uint selectionHeight = (uint)(selectionY + (FlxU.ceil((int)Object.Height / _tileHeight)) + 2);
+
+			//Then bound these coordinates by the map edges
+			if (selectionX < 0)
+				selectionX = 0;
+			if (selectionY < 0)
+				selectionY = 0;
+			if (selectionWidth > widthInTiles)
+				selectionWidth = (uint)widthInTiles;
+			if (selectionHeight > heightInTiles)
+				selectionHeight = (uint)heightInTiles;
+
+			//Then loop through this selection of tiles and call FlxObject.separate() accordingly
+			uint rowStart = (uint)selectionY * (uint)widthInTiles;
+			uint row = (uint)selectionY;
+			uint column;
+			FlxTile tile;
+			Boolean overlapFound;
+			float deltaX = X - Last.X;
+			float deltaY = Y - Last.Y;
+
+
+
+			while (row < selectionHeight)
+			{
+				column = (uint)selectionX;
+				while (column < selectionWidth)
+				{
+					overlapFound = false;
+					tile = _tileObjects[(int)_data[(int)(rowStart+column)]] as FlxTile;
+					if ( Convert.ToBoolean(tile.AllowCollisions) )
+					{
+						tile.X = X + (int)column * _tileWidth;
+						tile.Y = Y + (int)row * _tileHeight;
+						tile.Last.X = tile.X - deltaX;
+						tile.Last.Y = tile.Y - deltaY;
+						if (Callback != null)
+						{
+							if (FlipCallbackParams)
+								overlapFound = Callback(Object, tile);
+							else
+								overlapFound = Callback(tile, Object);
+						}
+						else
+						{
+							overlapFound = (Object.X + Object.Width > tile.X) && (Object.X < tile.X + tile.Width) && (Object.Y + Object.Height > tile.Y) && (Object.Y < tile.Y + tile.Height);
+						}
+						if (overlapFound)
+						{
+							if ((tile.callback != null))
+							{
+								tile.mapIndex = (uint)rowStart + column;
+								tile.callback(tile, Object);
+							}
+							results = true;
+						}
+					}
+					else if ((tile.callback != null))
+					{
+						tile.mapIndex = (uint)rowStart + (uint)column;
+						tile.callback(tile, Object);
+					}
+					column++;
+				}
+				rowStart += (uint)widthInTiles;
+				row++;
+			}
+			return results;
+		}
+
+
+		// overlapsPoint
+		override public Boolean overlapsPoint(FlxPoint point, Boolean inScreenSpace = false, FlxCamera camera = null)
+		{
+			if (!inScreenSpace)
+				return (_tileObjects[_data[(int)(((point.Y - Y) / _tileHeight) * widthInTiles + (point.X - X) / _tileWidth)]] as FlxTile).AllowCollisions > 0;
+
+			if (camera == null)
+				camera = FlxG.camera;
+			point.X = point.X - camera.Scroll.X;
+			point.Y = point.Y - camera.Scroll.Y;
+			getScreenXY(_tagPoint, camera);
+			return (_tileObjects[_data[(int)(((point.Y - _tagPoint.Y) / _tileHeight) * widthInTiles + (point.X - _tagPoint.X) / _tileWidth)]] as FlxTile).AllowCollisions > 0;
+		}
+
+		/**
+		 * An internal function used by the binary auto-tilers.
+		 * 
+		 * @param	Index		The index of the tile you want to analyze.
+		 */
+		protected void autoTile(int Index)
+		{
+			if(_data[Index] == 0)
+				return;
+
+			_data[Index] = 0;
+			if((Index-widthInTiles < 0) || (_data[Index-widthInTiles] > 0)) 		//UP
+				_data[Index] += 1;
+			if((Index%widthInTiles >= widthInTiles-1) || (_data[Index+1] > 0)) 		//RIGHT
+				_data[Index] += 2;
+			if((Index+widthInTiles >= totalTiles) || (_data[Index+widthInTiles] > 0)) //DOWN
+				_data[Index] += 4;
+			if((Index%widthInTiles <= 0) || (_data[Index-1] > 0)) 					//LEFT
+				_data[Index] += 8;
+			if((auto == ALT) && (_data[Index] == 15))	//The alternate algo checks for interior corners
+			{
+				if((Index%widthInTiles > 0) && (Index+widthInTiles < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
+					_data[Index] = 1;		//BOTTOM LEFT OPEN
+				if((Index%widthInTiles > 0) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles-1] <= 0))
+					_data[Index] = 2;		//TOP LEFT OPEN
+				if((Index%widthInTiles < widthInTiles-1) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles+1] <= 0))
+					_data[Index] = 4;		//TOP RIGHT OPEN
+				if((Index%widthInTiles < widthInTiles-1) && (Index+widthInTiles < totalTiles) && (_data[Index+widthInTiles+1] <= 0))
+					_data[Index] = 8; 		//BOTTOM RIGHT OPEN
+			}
+			_data[Index] += 1;
+		}
+
+		protected void updateTile(int Index)
+		{
+			FlxTile tile = _tileObjects[_data[Index]] as FlxTile;
+			if ((tile == null) || !tile.Visible)
+			{
+				_rects[Index] = Rectangle.Empty;
+				return;
+			}
+			int rx = (int)(_data[Index] - _startingIndex) * _tileWidth;
+			int ry = 0;
+			if (rx >= _tiles.Width)
+			{
+				ry = (rx / _tiles.Width) * _tileHeight;
+				rx %= _tiles.Width;
+			}
+			_rects[Index] = (new Rectangle(rx, ry, _tileWidth, _tileHeight));
+		}
+
+
+
+		public void follow(FlxCamera Camera = null, int Border = 0, Boolean UpdateWorld = false)
+		{
+			if (Camera == null)
+				Camera = FlxG.camera;
+			Camera.setBounds(X + Border * tileSize, Y + Border * tileSize, Width - Border * tileSize * 2, Height - Border * tileSize * 2, UpdateWorld);
+		}
+
+		public int getTile(int X, int Y)
+		{
+			int i = (Y * widthInTiles + X);
+			return (int)_data[i];
+		}
+
+		/**
+		 * Change the data and graphic of a tile in the tilemap.
+		 * 
+		 * @param	X				The X coordinate of the tile (in tiles, not pixels).
+		 * @param	Y				The Y coordinate of the tile (in tiles, not pixels).
+		 * @param	Tile			The new integer data you wish to inject.
+		 * @param	UpdateGraphics	Whether the graphical representation of this tile should change.
+		 * 
+		 * @return	Whether or not the tile was actually changed.
+		 */ 
+		public Boolean setTile(uint x,uint y,uint Tile, Boolean UpdateGraphics=true)
+		{
+			if((x >= widthInTiles) || (y >= heightInTiles))
+				return false;
+			return setTileByIndex((uint)(y * widthInTiles + x),Tile,UpdateGraphics);
+		}
+
+		/**
+		 * Change the data and graphic of a tile in the tilemap.
+		 * 
+		 * @param	Index			The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+		 * @param	Tile			The new integer data you wish to inject.
+		 * @param	UpdateGraphics	Whether the graphical representation of this tile should change.
+		 * 
+		 * @return	Whether or not the tile was actually changed.
+		 */
+		public Boolean setTileByIndex(uint Index, uint Tile, Boolean UpdateGraphics=true)
+		{
+			if(Index >= _data.Length)
+				return false;
+
+			Boolean ok = true;
+			_data[Index] = (int)Tile;
+
+			if(!UpdateGraphics)
+				return ok;
+
+			setDirty();
+
+			if(auto == OFF)
+			{
+				updateTile((int)Index);
+				return ok;
+			}
+
+			//If this map is autotiled and it changes, locally update the arrangement
+			int i;
+			int row = (int)(Index/widthInTiles) - 1;
+			int rowLength = row + 3;
+			int column = (int)Index%widthInTiles - 1;
+			int columnHeight = column + 3;
+			while(row < rowLength)
+			{
+				column = columnHeight - 3;
+				while(column < columnHeight)
+				{
+					if((row >= 0) && (row < heightInTiles) && (column >= 0) && (column < widthInTiles))
+					{
+						i = row*widthInTiles+column;
+						autoTile(i);
+						updateTile(i);
+					}
+					column++;
+				}
+				row++;
+			}
+
+			return ok;
+		}
+
+		public void setTileProperties(uint Tile, uint AllowCollisions = 0x1111, Action<FlxTile, FlxObject> Callback = null, uint Range = 1)
+		{
+			if (Range <= 0)
+				Range = 1;
+			FlxTile tile;
+			uint i = Tile;
+			uint l = Tile + Range;
+			while (i < l)
+			{
+				tile = _tileObjects[(int)i++] as FlxTile;
+				tile.AllowCollisions = AllowCollisions;
+				tile.callback = Callback;
+			}
+		}
+
+		/**
 		 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
 		 * If no path is discovered then a null reference is returned.
 		 * 
@@ -499,7 +656,7 @@ namespace MonoFlixel
 			return path;
 		}
 
-        /**
+		/**
 		 * Pathfinding helper function, strips out extra points on the same line.
 		 *
 		 * @param	Points		An array of <code>FlxPoint</code> nodes.
@@ -525,7 +682,7 @@ namespace MonoFlixel
 			}
 		}
 
-        /**
+		/**
 		 * Pathfinding helper function, strips out even more points by raycasting from one point to the next and dropping unnecessary points.
 		 * 
 		 * @param	Points		An array of <code>FlxPoint</code> nodes.
@@ -553,7 +710,7 @@ namespace MonoFlixel
 			}
 		}
 
-        /**
+		/**
 		 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
 		 * NOTE: Currently this process does NOT use any kind of fancy heuristic!  It's pretty brute.
 		 * 
@@ -562,12 +719,12 @@ namespace MonoFlixel
 		 * 
 		 * @return	A Flash <code>Array</code> of <code>FlxPoint</code> nodes.  If the end tile could not be found, then a null <code>Array</code> is returned instead.
 		 */
-        protected List<int> computePathDistance(int StartIndex, int EndIndex)
+		protected List<int> computePathDistance(int StartIndex, int EndIndex)
 		{
 			//Create a distance-based representation of the tilemap.
 			//All walls are flagged as -2, all open areas as -1.
 			int mapSize = widthInTiles*heightInTiles;
-            List<int> distances = new List<int>(mapSize);
+			List<int> distances = new List<int>(mapSize);
 			int i = 0;
 			while(i < mapSize)
 			{
@@ -636,7 +793,7 @@ namespace MonoFlixel
 						if(distances[index] == -1)
 						{
 							distances[index] = distance;
-                            neighbors.Add(index);
+							neighbors.Add(index);
 						}
 					}
 					if(left)
@@ -645,7 +802,7 @@ namespace MonoFlixel
 						if(distances[index] == -1)
 						{
 							distances[index] = distance;
-                            neighbors.Add(index);
+							neighbors.Add(index);
 						}
 					}
 					if(up && right)
@@ -654,7 +811,7 @@ namespace MonoFlixel
 						if((distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
 						{
 							distances[index] = distance;
-                            neighbors.Add(index);
+							neighbors.Add(index);
 						}
 					}
 					if(right && down)
@@ -663,7 +820,7 @@ namespace MonoFlixel
 						if((distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
 						{
 							distances[index] = distance;
-                            neighbors.Add(index);
+							neighbors.Add(index);
 						}
 					}
 					if(left && down)
@@ -672,7 +829,7 @@ namespace MonoFlixel
 						if((distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
 						{
 							distances[index] = distance;
-                            neighbors.Add(index);
+							neighbors.Add(index);
 						}
 					}
 					if(up && left)
@@ -681,7 +838,7 @@ namespace MonoFlixel
 						if((distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
 						{
 							distances[index] = distance;
-                            neighbors.Add(index);
+							neighbors.Add(index);
 						}
 					}
 				}
@@ -692,7 +849,7 @@ namespace MonoFlixel
 			return distances;
 		}
 
-        /**
+		/**
 		 * Pathfinding helper function, recursively walks the grid and finds a shortest path back to the start.
 		 * 
 		 * @param	Data	A Flash <code>Array</code> of distance information.
@@ -701,7 +858,7 @@ namespace MonoFlixel
 		 */
 		protected void walkPath(List<int> Data, int Start, List<FlxPoint> Points)
 		{
-            Points.Add(new FlxPoint((int)X + (int)(Start % widthInTiles) * _tileWidth + _tileWidth * 0.5f, (int)Y + (int)(Start / widthInTiles) * _tileHeight + _tileHeight * 0.5f));
+			Points.Add(new FlxPoint((int)X + (int)(Start % widthInTiles) * _tileWidth + _tileWidth * 0.5f, (int)Y + (int)(Start / widthInTiles) * _tileHeight + _tileHeight * 0.5f));
 			if(Data[Start] == 0)
 				return;
 
@@ -788,7 +945,7 @@ namespace MonoFlixel
 		}
 
 
-        /**
+		/**
 		 * Shoots a ray from the start point to the end point.
 		 * If/when it passes through a tile, it stores that point and returns false.
 		 * 
@@ -875,6 +1032,6 @@ namespace MonoFlixel
 			return true;
 		}
 
-    }
+	}
 }
 
