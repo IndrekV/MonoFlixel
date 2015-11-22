@@ -258,7 +258,7 @@ namespace MonoFlixel
         /**
 		 * Internal, used to render buffer to screen space.
 		 */
-		//internal var _flashSprite:Sprite;
+		internal FlxSprite _flashSprite;
 		
         /**
 		 * Internal, used to render buffer to screen space.
@@ -348,7 +348,7 @@ namespace MonoFlixel
         /**
 		 * Internal helper variable for doing better wipes/fills between renders.
 		 */
-		//protected var _fill:BitmapData;
+		protected Texture2D _fill;
 
         // flx# stuff
         public Matrix transform;
@@ -400,32 +400,26 @@ namespace MonoFlixel
             screen = new FlxSprite();
             screen.makeGraphic((uint) width, (uint) height, new Color(0, 0, 0, 0));
             screen.setOriginToCorner();
-            //Buffer = screen.Pixels;
+			//Buffer = (RenderTarget2D)screen.Pixels;
             BgColor = FlxG.bgColor;
 
             _color = Color.White;
-            //_color = 0xffffffff;
-
-            /*
+			/*
 			_flashBitmap = new Bitmap(buffer);
 			_flashBitmap.x = -width*0.5;
 			_flashBitmap.y = -height*0.5;
 			_flashSprite = new Sprite();
-            */
-
-            // flx# - ?
-			// zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
-			
-            /*
-            _flashOffsetX = width*0.5*zoom;
+			*/
+			zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
+			/*
+			_flashOffsetX = width*0.5*zoom;
 			_flashOffsetY = height*0.5*zoom;
 			_flashSprite.x = x + _flashOffsetX;
 			_flashSprite.y = y + _flashOffsetY;
 			_flashSprite.addChild(_flashBitmap);
 			_flashRect = new Rectangle(0,0,width,height);
 			_flashPoint = new Point();
-            */
-
+			*/
             fxFlashColor = Color.Black;
             fxFlashDuration = 0.0f;
             fxFlashComplete = null;
@@ -500,8 +494,6 @@ namespace MonoFlixel
                 else
                 {
                     float edge;
-                    //float targetX = FlxU.ceil(Target.X + ((Target.X > 0) ? 0.0000001f : -0.0000001f));
-                    //float targetY = FlxU.ceil(Target.Y + ((Target.Y > 0) ? 0.0000001f : -0.0000001f));
                     float targetX = Target.X + ((Target.X > 0) ? 0.0000001f : -0.0000001f);
                     float targetY = Target.Y + ((Target.Y > 0) ? 0.0000001f : -0.0000001f);
 
@@ -576,8 +568,7 @@ namespace MonoFlixel
                 fxFadeAlpha += FlxG.elapsed / fxFadeDuration;
                 if (fxFadeAlpha >= 1.0)
                 {
-                    //fxFadeAlpha = 1.0f;
-                    fxFadeAlpha = 0;
+                    fxFadeAlpha = 1.0f;
                     if (fxFadeComplete != null)
                     {
                         fxFadeComplete();                        
@@ -610,13 +601,6 @@ namespace MonoFlixel
                     }
                 }
             }
-
-            // flx#
-            //Scroll.X -= fxShakeOffset.X;
-            //Scroll.Y -= fxShakeOffset.Y;
-
-            //if (zooming < 1)
-            //    zooming = 1;
         }
 
         /// <summary>
@@ -710,14 +694,12 @@ namespace MonoFlixel
             {
                 return;
             }
-
-            // flx# - orly?
+			fxFlashColor = color;
             if (duration <= 0)
             {
                 duration = float.MinValue;
             }
-
-            fxFlashColor = color;
+            
             fxFlashDuration = duration;
             fxFlashComplete = onComplete;
             fxFlashAlpha = 1.0f;
@@ -737,16 +719,15 @@ namespace MonoFlixel
                 return;
             }
 
-            // flx# - orly?
+			fxFadeColor = color;
             if (duration <= 0)
             {
                 duration = float.MinValue;
             }
 
-            fxFadeColor = color;
             fxFadeDuration = duration;
             fxFadeComplete = onComplete;
-            fxFadeAlpha = float.Epsilon; // Number.MIN_VALUE;
+			fxFadeAlpha = float.MinValue;
         }
 
         /// <summary>
@@ -783,8 +764,10 @@ namespace MonoFlixel
             FlashSprite.Y = Y + (Height * 0.5f);
 
             // flx#
+			/*
             fxShakeOffset.X = 0;
             fxShakeOffset.Y = 0;
+            */
         }
 
         /// <summary>
@@ -859,6 +842,16 @@ namespace MonoFlixel
 			_fill.fillRect(_flashRect,Color);
 			buffer.copyPixels(_fill,_flashRect,_flashPoint,null,null,BlendAlpha); 
             */
+
+			FlxS.SpriteBatch.Draw(
+				_fxHelperTexture,
+				CameraRect,
+				color);
+
+			/*
+			_fill.fillRect(_flashRect,Color);
+			Buffer.copyPixels(_fill,_flashRect,_flashPoint,null,null,BlendAlpha);
+			*/
         }
 
         /// <summary>
@@ -877,16 +870,6 @@ namespace MonoFlixel
                 Debug.WriteLine("FlashAlpha = " + fxFlashAlpha);   
             }
 
-            /*
-			var alphaComponent:Number;
-			
-			if(_fxFlashAlpha > 0.0)
-			{
-				alphaComponent = _fxFlashColor>>24;
-				fill((uint(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFlashAlpha)<<24)+(_fxFlashColor&0x00ffffff));
-			}
-			*/
-
 			// Draw the "fade" special effect onto the buffer
             if ((fxFadeAlpha > 0.0) && (fxFadeAlpha < 1.0))
             {
@@ -898,14 +881,7 @@ namespace MonoFlixel
                 Debug.WriteLine("FadeAlpha = " + fxFadeAlpha);
             }
 
-            /*
-			if(_fxFadeAlpha > 0.0)
-			{
-				alphaComponent = _fxFadeColor>>24;
-				fill((uint(((alphaComponent <= 0)?0xff:alphaComponent)*_fxFadeAlpha)<<24)+(_fxFadeColor&0x00ffffff));
-			}
-            */
-
+			// Draw the "shake" special effect
             if ((fxShakeOffset.X != 0) || (fxShakeOffset.Y != 0))
             {
                 FlashSprite.X = X + FlashOffsetX + fxShakeOffset.X;
