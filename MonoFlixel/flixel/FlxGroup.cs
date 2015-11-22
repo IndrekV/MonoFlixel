@@ -84,7 +84,6 @@ namespace MonoFlixel
         public FlxGroup(uint maxSize = 0) : base()
         {
             Members = new List<FlxBasic>();
-            //length = 0;
             _maxSize = maxSize;
             _marker = 0;
             _sortIndex = null;
@@ -202,6 +201,7 @@ namespace MonoFlixel
 					}
 					catch(Exception e)
 					{
+						Console.WriteLine ("Exception: {0}", e.Message);
 						return null;
 					}
 				}
@@ -226,6 +226,7 @@ namespace MonoFlixel
 				}
 				catch(Exception e)
 				{
+					Console.WriteLine ("Exception: {0}", e.Message);
 					return null;
 				}
 			}
@@ -237,18 +238,16 @@ namespace MonoFlixel
         /// <param name="flxBasic">The <code>FlxBasic</code> you want to remove.</param>
         /// <param name="splice">Whether the object should be cut from the array entirely or not.</param>
         /// <returns>The removed object.</returns>
-        public FlxBasic Remove(FlxBasic flxBasic, bool splice = false)
+        public FlxBasic Remove(FlxBasic Object, bool splice = false)
         {
-            if (splice) throw new NotSupportedException();
-
-            bool wasFound = Members.Remove(flxBasic);
-
-            if (!wasFound)
-            {
-                return null;
-            }
-
-            return flxBasic;
+			int index = Members.IndexOf(Object);
+			if((index < 0) || (index >= Members.Count))
+				return null;
+			if(splice)
+				Members.RemoveAt(index);
+			else
+				Members[index] = null;
+			return Object;
         }
 
         /// <summary>
@@ -319,8 +318,10 @@ namespace MonoFlixel
                 {
                     Type type = flxBasic.GetType();
                     PropertyInfo propertyInfo = type.GetProperty(propertyName);
-                    MethodInfo setMethod = propertyInfo.GetSetMethod();
-                    setMethod.Invoke(flxBasic, new[] {value});
+					if (propertyInfo != null) {
+						MethodInfo setMethod = propertyInfo.GetSetMethod ();
+						setMethod.Invoke (flxBasic, new[] { value });
+					}
                 }
             }
         }
@@ -394,19 +395,6 @@ namespace MonoFlixel
         /// <returns>A <code>FlxBasic</code> currently flagged as existing.</returns>
         public FlxBasic GetFirstExtant()
         {
-            /*
-            foreach (FlxBasic flxBasic in Members)
-            {
-                if ((flxBasic != null) &&
-                    flxBasic.Exists)
-                {
-                    return flxBasic;
-                }
-            }
-
-            return null;
-            */
-
             return Members.FirstOrDefault(
                 flxBasic => (flxBasic != null) && flxBasic.Exists);
         }
