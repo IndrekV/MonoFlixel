@@ -152,6 +152,11 @@ namespace MonoFlixel
         /// </summary>
         public static bool visualDebug;
 
+		/**
+	 	* Global <code>SpriteBatch</code> for rendering sprites to the screen.
+	 	*/
+		static public SpriteBatch Batch;
+
         /// <summary>
         /// Setting this to true will disable/skip stuff that isn't necessary for mobile platforms like Android. [BETA]
         /// </summary>
@@ -840,48 +845,47 @@ namespace MonoFlixel
         /// <returns>The <code>BitmapData</code> we just created.</returns>
         static public Texture2D addBitmap(Texture2D graphic, bool reverse = false, bool unique = false, string key = null)
         {
-            throw new NotSupportedException();
-
-            /*
-			var needReverse:Boolean = false;
-			if(Key == null)
+			bool needReverse = false;
+			if(key == null)
 			{
-				Key = String(Graphic)+(Reverse?"_REVERSE_":"");
-				if(Unique && checkBitmapCache(Key))
+				key = graphic.ToString()+(reverse?"_REVERSE_":"");
+				if(unique && checkBitmapCache(key))
 				{
-					var inc:uint = 0;
-					var ukey:String;
+					int inc = 0;
+					string ukey;
 					do
 					{
-						ukey = Key + inc++;
+						ukey = key + inc++;
 					} while(checkBitmapCache(ukey));
-					Key = ukey;
+					key = ukey;
 				}
 			}
-			
+
 			//If there is no data for this key, generate the requested graphic
-			if(!checkBitmapCache(Key))
+			if(!checkBitmapCache(key))
 			{
-				_cache[Key] = (new Graphic).bitmapData;
-				if(Reverse)
+				//_cache[key] = graphic.bitmapData;
+				if(reverse)
 					needReverse = true;
 			}
-			var pixels:BitmapData = _cache[Key];
-			if(!needReverse && Reverse && (pixels.width == (new Graphic).bitmapData.width))
+			//BitmapData pixels = _cache[key];
+			Texture2D pixels = graphic;
+			if(!needReverse && reverse && (pixels.Width == graphic.Width))
 				needReverse = true;
 			if(needReverse)
 			{
-				var newPixels:BitmapData = new BitmapData(pixels.width<<1,pixels.height,true,0x00000000);
+				/*
+				BitmapData newPixels = new BitmapData(pixels.Width<<1,pixels.Height,true,0x00000000);
 				newPixels.draw(pixels);
-				var mtx:Matrix = new Matrix();
+				Matrix mtx = new Matrix();
 				mtx.scale(-1,1);
 				mtx.translate(newPixels.width,0);
 				newPixels.draw(pixels,mtx);
 				pixels = newPixels;
 				_cache[Key] = pixels;
+				*/
 			}
 			return pixels;
-            */
         }
 
         /// <summary>
@@ -949,8 +953,8 @@ namespace MonoFlixel
             var newViewport = new Viewport((int)newCamera.X, (int)newCamera.Y, (int)newCamera.Width, (int)newCamera.Height);
             FlxS.Viewports.Add(newViewport);
             
-            //FlxG.log("camera is at x: " + NewCamera.x + " y: " + NewCamera.y + " width: " + NewCamera.width + " height " + NewCamera.height);
-            //FlxG.log("camera count: " + FlxG.cameras.Count);
+            FlxG.log("camera is at x: " + newCamera.X + " y: " + newCamera.Y + " width: " + newCamera.Width + " height " + newCamera.Height);
+            FlxG.log("camera count: " + FlxG.cameras.Count);
 
             return newCamera;
 
@@ -993,11 +997,12 @@ namespace MonoFlixel
         {
             foreach (FlxCamera flxCam in cameras)
             {
-                //FlxG._game.removeChild(cam._flashSprite); // ?
                 flxCam.destroy();
             }
 
             cameras.Clear();
+
+			FlxS.Viewports.Clear ();
 
             if (newCamera == null)
             {
@@ -1006,23 +1011,6 @@ namespace MonoFlixel
 
             FlxG.addCamera(newCamera);
             FlxG.camera = newCamera;
-
-            /*
-			var cam:FlxCamera;
-			var i:uint = 0;
-			var l:uint = cameras.length;
-			while(i < l)
-			{
-				cam = FlxG.cameras[i++] as FlxCamera;
-				FlxG._game.removeChild(cam._flashSprite);
-				cam.destroy();
-			}
-			FlxG.cameras.length = 0;
-			
-			if(NewCamera == null)
-				NewCamera = new FlxCamera(0,0,FlxG.width,FlxG.height)
-			FlxG.camera = FlxG.addCamera(NewCamera);
-            */
         }
 
         /// <summary>
