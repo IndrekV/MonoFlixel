@@ -14,10 +14,10 @@ Fixed classes
 - FlxTilemap.cs
 - FlxButton.cs
 + FlxEmitter.cs
-- FlxGroup.cs
++ FlxGroup.cs
 + FlxParticle.cs
 + FlxPoint.cs
-- FlxS.cs
+?+ FlxS.cs
 - FlxSprite.cs
 - FlxText.cs
 + FlxTileblock.cs
