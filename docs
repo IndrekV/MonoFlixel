@@ -15,7 +15,7 @@ Fixed classes
 - FlxButton.cs
 + FlxEmitter.cs
 - FlxGroup.cs
-- FlxParticle.cs
++ FlxParticle.cs
 + FlxPoint.cs
 - FlxS.cs
 - FlxSprite.cs
