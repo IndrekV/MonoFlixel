@@ -774,6 +774,8 @@ namespace MonoFlixel
                     //Color drawColor = Color.White * _alpha;
                     Color drawColor = Color * _alpha;
 
+					SpriteEffects effect = Facing == FlxObject.Left ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
                     FlxS.SpriteBatch.Draw(
                         _pixels,
                         position,
@@ -782,7 +784,7 @@ namespace MonoFlixel
                         Angle,
                         origin,
                         scale,
-                        SpriteEffects.None,
+                        effect,
                         0);
 
                     /*
