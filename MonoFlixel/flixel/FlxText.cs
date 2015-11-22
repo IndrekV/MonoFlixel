@@ -85,7 +85,12 @@ namespace MonoFlixel
 	/**
 	 * Internal tracker for the size of the text.
 	 */
-		protected int _size;
+		protected int _size = 8;
+
+	/**
+	 * Internal tracker for the size of the text.
+	 */
+		protected int _default_size = 8;
 
 	/**
 	 * Internal tracker for the x-position of the shadow, default is 1.
@@ -148,8 +153,8 @@ namespace MonoFlixel
 
 		public override void destroy ()
 		{
-			_textField.Dispose ();
-			_textField = null;
+			//_textField.Dispose ();
+			//_textField = null;
 			text = null;
 			//_bitmapFontParameter = null;
 			//_distanceFieldShader = null;
@@ -178,7 +183,7 @@ namespace MonoFlixel
 		{
 			if (Font == null)
 				Font = _font;
-
+			_size = (int)FlxU.floor (size);
 			if (Font != null && (!Font.Equals (_font) || size != _size)) {
 				try {
 					//_textField = new SpriteBatch(FlxG.loadFont(Font, FlxU.round(Size), _bitmapFontParameter));
@@ -191,7 +196,6 @@ namespace MonoFlixel
 				}
 
 				_font = Font;
-				_size = (int)FlxU.floor (size);
 				LoadedFont = FlxS.ContentManager.Load<SpriteFont> (_font);
 			}
 
@@ -557,13 +561,10 @@ namespace MonoFlixel
 			// Render shadow behind the text
 			if(_shadow != Color.Transparent)
 			{
-				FlxS.SpriteBatch.DrawString (LoadedFont, text, new Vector2(pos.X+_shadowX, pos.Y+_shadowY), _shadow, 0, origin, 1, SpriteEffects.None, 0);	
+				FlxS.SpriteBatch.DrawString (LoadedFont, text, new Vector2(pos.X+_shadowX, pos.Y+_shadowY), _shadow, 0, origin, _size/_default_size, SpriteEffects.None, 0);	
 			}
 
-			FlxS.SpriteBatch.DrawString (LoadedFont, text, pos, Color, 0, origin, 1, SpriteEffects.None, 0);
+			FlxS.SpriteBatch.DrawString (LoadedFont, text, pos, Color, 0, origin, _size/_default_size, SpriteEffects.None, 0);
 		}
-
-
-
 	}
 }
