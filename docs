@@ -10,7 +10,7 @@ Fixed classes
 + FlxRect.cs
 - FlxSound.cs
 - FlxState.cs
-- FlxTile.cs
++ FlxTile.cs
 - FlxTilemap.cs
 - FlxButton.cs
 + FlxEmitter.cs
