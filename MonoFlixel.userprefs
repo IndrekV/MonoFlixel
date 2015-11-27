@@ -1,6 +1,18 @@
 ﻿<Properties StartupItem="MonoFlixel/MonoFlixel.shproj">
   <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="MonoFlixel/flixel/FlxSound.cs">
+    <Files>
+      <File FileName="MonoFlixel/flixel/FlxU.cs" Line="433" Column="3" />
+      <File FileName="MonoFlixel/flixel/System/FlxAnim.cs" Line="1" Column="1" />
+      <File FileName="MonoFlixel/flixel/System/FlxColor.cs" Line="1" Column="1" />
+      <File FileName="MonoFlixel/flixel/System/FlxKeyboard.cs" Line="24" Column="10" />
+      <File FileName="MonoFlixel/flixel/System/FlxList.cs" Line="17" Column="5" />
+      <File FileName="MonoFlixel/flixel/System/FlxMouse.cs" Line="1" Column="1" />
+      <File FileName="MonoFlixel/flixel/FlxSound.cs" Line="524" Column="6" />
+      <File FileName="MonoFlixel/flixel/Flash/SoundTransform.cs" Line="69" Column="2" />
+      <File FileName="MonoFlixel/flixel/Flash/SoundChannel.cs" Line="22" Column="8" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

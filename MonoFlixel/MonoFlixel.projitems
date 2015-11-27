@@ -11,6 +11,12 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)flixel\" />
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\320480\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\480800\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\font\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\holo_dark\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Content\logo_parts\" />
+    <Folder Include="$(MSBuildThisFileDirectory)flixel\Plugins\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxBasic.cs" />
@@ -24,7 +30,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxPoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxRect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxS.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxSound.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxSprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxText.cs" />
@@ -43,6 +48,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxMouse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxQuadTree.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxSound.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\FlxTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\Plugins\DebugPathDisplay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\Plugins\TimerManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)flixel\System\FlxEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Content\autotiles_alt.png" />
@@ -64,5 +74,79 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Content\deffont.xnb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\base.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_a.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_b.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_c.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_down.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_left.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_right.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_up.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_x.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button_y.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\button.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\default.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\dpad_center.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_corners.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_light.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\pack" />
+    <None Include="$(MSBuildThisFileDirectory)Content\pack.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\preloader" />
+    <None Include="$(MSBuildThisFileDirectory)Content\preloader.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\splashscreen" />
+    <None Include="$(MSBuildThisFileDirectory)Content\splashscreen.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\stick.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\320480\splashscreen" />
+    <None Include="$(MSBuildThisFileDirectory)Content\320480\splashscreen.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\480800\splashscreen" />
+    <None Include="$(MSBuildThisFileDirectory)Content\480800\splashscreen.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\checkbox.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_bottomcenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_bottomleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_bottomright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_middlecenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_middleleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_middleright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_topcenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_topleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\label_topright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_bottomcenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_bottomleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_bottomright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_middlecenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_middleleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_middleright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_topcenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_topleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_button_topright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_bottomcenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_bottomleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_bottomright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_middlecenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_middleleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_middleright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_topcenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_topleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textarea_topright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textfield_middlecenter.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textfield_middleleft.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textfield_middleright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\ninepatch_textfield_topright.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\radiobutton.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\switch.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\tab.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\tab_divider.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\holo_dark\tab_divider_vertical.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\code.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\dpad.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\flixel-gdx.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\gear_blue.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\gear_green.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\gear_grey.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\gear_purple.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\heart.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\lightbulb.png" />
+    <None Include="$(MSBuildThisFileDirectory)Content\logo_parts\powered_by.png" />
   </ItemGroup>
 </Project>
