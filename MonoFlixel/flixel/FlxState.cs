@@ -20,7 +20,7 @@ namespace MonoFlixel
 
         }
 
-        /*
+        
         /// <summary>
         /// Override this only if you are familiar with SpriteBatches and Viewports.  Otherwise leave it alone to avoid
         /// any issues with rendering.
@@ -31,7 +31,7 @@ namespace MonoFlixel
             //we don't need no new-fangled pixel processing
             //in our retro engine!
             //FlxG.graphics.PreferMultiSampling = false;
-
+			/*
             // first clear the screen with the background color of your choice
             FlxS.GraphicsDevice.Clear(FlxG.bgColor);
 
@@ -53,7 +53,13 @@ namespace MonoFlixel
                 
                 FlxS.SpriteBatch.End();
             }
+			*/
+
+			base.draw ();
+
+			if (FlxG.mouse.cursor.Visible)
+				FlxG.mouse.cursor.draw();
         }
-        */
+        
     }
 }

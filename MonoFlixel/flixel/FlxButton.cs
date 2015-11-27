@@ -11,7 +11,7 @@ using MonoFlixel;
 
 namespace MonoFlixel.Examples
 {
-	public delegate void FlxButtonClick();
+	public delegate void FlxButtonEvent();
 
 	/**
 	 * A simple button class that calls a function when clicked by the mouse.
@@ -107,7 +107,7 @@ namespace MonoFlixel.Examples
 		/// <summary>
 		/// This function is called when the button is clicked.
 		/// </summary>
-		protected FlxButtonClick _callback;
+		protected FlxButtonEvent _callback;
 
 		/**
 		 * Creates a new <code>FlxButton</code> object with a gray background and a
@@ -118,7 +118,7 @@ namespace MonoFlixel.Examples
 		 * @param Label The text that you want to appear on the button.
 		 * @param OnClick The function to call whenever the button is clicked.
 		 */
-		public FlxButton(float x = 0, float y = 0, String label = null, FlxButtonClick Callback = null) : base(x, y)
+		public FlxButton(float x = 0, float y = 0, String label = null, FlxButtonEvent Callback = null) : base(x, y)
 		{
 			if(label != null)
 			{
@@ -203,15 +203,14 @@ namespace MonoFlixel.Examples
 			// the Label appearance based on animation frame.
 			if(Label == null)
 				return;
+			
 			switch(Frame)
 			{
 			case Highlight: // Extra behavior to accommodate checkbox logic.
 				Label.Alpha = 1.0f;
-				Console.Write ("Highlighted");
 				break;
 			case Pressed:
 				Label.Alpha = 0.5f;
-				Console.Write ("Pressed");
 				Label.Y++;
 				break;
 			case Normal:
@@ -403,7 +402,6 @@ namespace MonoFlixel.Examples
 
 			if (overlapsPoint(new FlxPoint (FlxG.mouse.x, FlxG.mouse.y)) /*&& _counter > 0.5f*/)
 			{
-				Console.WriteLine("calling back from mouse press");
 				//on = true;
 				_callback();
 			}

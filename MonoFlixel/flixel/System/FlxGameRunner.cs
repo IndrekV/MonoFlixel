@@ -168,7 +168,9 @@ namespace MonoFlixel
             //FlxS.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // SpriteSortMode.Texture - Check speed gain
-
+			int i;
+			int l = FlxG.cameras.Count;
+			for (i = 0; i < l; i++) { //(l>1)?1:
             FlxS.SpriteBatch.Begin(SpriteSortMode.Immediate,
                                    BlendState.AlphaBlend,
                                    SamplerState.PointClamp,
@@ -180,9 +182,13 @@ namespace MonoFlixel
                                    //FlxG.camera.FxMatrix);
                                    // rotate + scale can be easily done in the spritebatch.draw calls
                                    // but maybe the translation can be nicely done here...
+
+				FlxS.GraphicsDevice.Viewport = FlxS.Viewports [i];     //viewport must be selected BEFORE spritebatch drawing
             
-            _flxGame.draw();
-            FlxS.SpriteBatch.End();
+				_flxGame.draw ();
+				FlxS.SpriteBatch.End();
+			}
+            
 
             FlxS.GraphicsDevice.SetRenderTarget(null);
             

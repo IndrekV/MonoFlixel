@@ -15,7 +15,7 @@ namespace MonoFlixel
 		public DebugPathDisplay()
 		{
 			_paths = new List<FlxPath>();
-			active = false; // don't call update on this plugin
+			Active = false; // don't call update on this plugin
 		}
 
 		/**
@@ -37,15 +37,16 @@ namespace MonoFlixel
 
 		public override void draw()
 		{
-			FlxCamera camera = FlxG.getActiveCamera();
+			//FlxCamera camera = FlxG.getActiveCamera();
+			FlxCamera camera = FlxG.camera;
 
-			if(cameras == null)
-				cameras = FlxG.cameras;
+			if(Cameras == null)
+				Cameras = FlxG.cameras;
 
-			if(!cameras.Contains(camera))
+			if(!Cameras.Contains(camera))
 				return;
 
-			if(FlxG.visualDebug && !ignoreDrawDebug)
+			if(FlxG.visualDebug && !IgnoreDrawDebug)
 				drawDebug(camera);
 		}
 
@@ -58,7 +59,7 @@ namespace MonoFlixel
 		 * @param Camera Which <code>FlxCamera</code> object to draw the debug data
 		 *        to.
 		 */
-		public override void drawDebug(FlxCamera Camera)
+		public override void drawDebug(FlxCamera Camera = null)
 		{
 			if(Camera == null)
 				Camera = FlxG.camera;
@@ -68,21 +69,9 @@ namespace MonoFlixel
 			while(i >= 0)
 			{
 				path = _paths.ElementAt(i--);
-				if((path != null) && !path.ignoreDrawDebug)
+				if((path != null) && !path.IgnoreDrawDebug)
 					path.drawDebug(Camera);
 			}
-		}
-
-		/**
-		 * Similar to <code>FlxObject</code>'s <code>drawDebug()</code>
-		 * functionality, this function calls <code>drawDebug()</code> on each
-		 * <code>FlxPath</code> for the specified camera. Very helpful for
-		 * debugging!
-		 */
-
-		public override void drawDebug()
-		{
-			drawDebug(null);
 		}
 
 		/**
@@ -104,7 +93,7 @@ namespace MonoFlixel
 		 */
 			public void remove(FlxPath Path)
 			{
-				int index = _paths.IndexOf(Path, true);
+				int index = _paths.IndexOf(Path);
 				if(index >= 0)
 					_paths.RemoveAt(index);
 			}

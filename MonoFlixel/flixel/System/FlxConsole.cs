@@ -28,8 +28,8 @@ namespace MonoFlixel
             add(bg);
             ScrollFactor.X = ScrollFactor.Y = 0;
             Visible = false;
-            text = new FlxText(100, 60, FlxS.GraphicsDevice.Viewport.Width - 160, "internal console is a work in progress", FlxG.defaultFont);
-            text.setFormat(FlxColor.WHITE);
+            //text = new FlxText(100, 60, FlxS.GraphicsDevice.Viewport.Width - 160, "internal console is a work in progress", FlxG.defaultFont);
+            //text.setFormat(FlxColor.WHITE);
             text.Alpha = 0.75f;
             add(text);
         }

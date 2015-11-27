@@ -492,7 +492,7 @@ namespace MonoFlixel
         /// <param name="Camera">Which Camera - currently only one exists</param>
         public override void drawDebug(FlxCamera Camera=null)
 		{
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
 			if(Camera == null)
 				Camera = FlxG.camera;

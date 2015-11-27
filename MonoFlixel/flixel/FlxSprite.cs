@@ -632,11 +632,12 @@ namespace MonoFlixel
         /// <returns></returns>
         public FlxSprite makeGraphic(uint width, uint height, Color color, bool unique = false, string key = null)
         {
+			/*
             if (unique || !string.IsNullOrEmpty(key))
             {
                 throw new NotSupportedException();    
             }
-
+			*/
             _bakedRotation = 0;
             _pixels = FlxG.createBitmap(width, height, color, unique, key);
 
@@ -1311,5 +1312,6 @@ namespace MonoFlixel
         {
             return new Vector2(X - Offset.X, Y - Offset.Y);
         }
+
     }
 }

@@ -198,7 +198,7 @@ namespace MonoFlixel
         /// and <code>DebugScrollFactor</code> to control the path's appearance.
         /// </summary>
         /// <param name="camera">The camera object the path will draw to.</param>
-        public void DrawDebug(FlxCamera camera)
+        public void drawDebug(FlxCamera camera)
         {
             throw new NotImplementedException();
 

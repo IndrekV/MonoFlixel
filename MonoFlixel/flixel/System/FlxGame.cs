@@ -576,6 +576,8 @@ namespace MonoFlixel
 			FlxG.drawPlugins();
 			FlxG.unlockCameras(); // Draw camera FX
 
+
+			 
 			//if(_debuggerUp)
 			//	_debugger.perf.flixelDraw(getTimer()-mark);
         }

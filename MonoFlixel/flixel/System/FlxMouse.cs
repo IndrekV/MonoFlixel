@@ -13,7 +13,7 @@ namespace MonoFlixel
 	/// </summary>
 	public class FlxMouse
 	{
-		private string ImgDefaultCursor = "cursor";
+		private string ImgDefaultCursor = "MonoFlixel/cursor";
 
 		private MouseState _curMouse;
 		private MouseState _lastMouse;
@@ -134,7 +134,7 @@ namespace MonoFlixel
 
 		public void show()
 		{
-			show("cursor", 0, 0);
+			show("MonoFlixel/cursor", 0, 0);
 		}
 
 		/// <summary>
@@ -220,7 +220,7 @@ namespace MonoFlixel
 		{
 
 			_lastMouse = _curMouse;
-			_curMouse = Mouse.GetState(); 
+			_curMouse = Mouse.GetState();
 
 			#if __IOS__
 			_lastTouch = _curTouch;
@@ -253,6 +253,7 @@ namespace MonoFlixel
 
 			screenX = _curMouse.X;
 			screenY = _curMouse.Y;
+			//Console.WriteLine ("XY {0}, {1} ScreenXY {2}, {3}", cursor.X, cursor.Y, screenX, screenY);
 			#endif
 
 			if (_mouseEvent != null)
@@ -266,8 +267,6 @@ namespace MonoFlixel
 					_mouseEvent(this, new FlxMouseEvent(MouseEventType.MouseUp));
 				}
 			}
-
-
 
 			if (hideAfterInactiveTime > 0.0f)
 			{
@@ -359,6 +358,7 @@ namespace MonoFlixel
 		{
 			return (_curMouse.RightButton == ButtonState.Pressed && _lastMouse.RightButton == ButtonState.Released);
 		}
+
 		/// <summary>
 		/// Was right mouse button just released?
 		/// </summary>
@@ -367,8 +367,6 @@ namespace MonoFlixel
 		{
 			return (_curMouse.RightButton == ButtonState.Released && _lastMouse.RightButton == ButtonState.Pressed);
 		}
-
-
 
 		/// <summary>
 		/// Is left mouse button pressed down?

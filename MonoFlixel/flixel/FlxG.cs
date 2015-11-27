@@ -953,8 +953,8 @@ namespace MonoFlixel
             var newViewport = new Viewport((int)newCamera.X, (int)newCamera.Y, (int)newCamera.Width, (int)newCamera.Height);
             FlxS.Viewports.Add(newViewport);
             
-            FlxG.log("camera is at x: " + newCamera.X + " y: " + newCamera.Y + " width: " + newCamera.Width + " height " + newCamera.Height);
-            FlxG.log("camera count: " + FlxG.cameras.Count);
+            //FlxG.log("camera is at x: " + newCamera.X + " y: " + newCamera.Y + " width: " + newCamera.Width + " height " + newCamera.Height);
+            //FlxG.log("camera count: " + FlxG.cameras.Count);
 
             return newCamera;
 
