@@ -2,6 +2,19 @@
 
 Cross-platform game engine written in C# that aims to seamlessly join the power of MonoGame and Flixel.
 
+## Project abandoned
+
+This project was created because I wanted to use Flixel to build 2D games for consoles. As MonoGame had console export support it seemed to be a good way to go. Halfway through the project I found out that HaxeFlixel community is already working hard to support the consoles and the work seemed really promosing. I decided to end this project and choose HaxeFlixel as it has a good community and more supported platforms. Never the less this was a good learning experience to the depths of MonoGame, C# and Flixel.
+
+
+## Alternative Flixel C# ports
+
+If you are still looking for Flixel C# port then there are few projects that were also used as inpiration for this engine.
+
+- [XNAFlixel](https://github.com/initials/XNAFlixel)
+- [X-flixel](https://github.com/StAidan/X-flixel)
+- [flxSharp](https://github.com/jlorek/flxSharp)
+
 
 ## Background
 
@@ -16,6 +29,10 @@ Flixel is an open source game-making library that is completely free for persona
 ### Various
 
 This project is based on multiple different Flixel projects: Flixel, flxSharp by jlorek, FliXNA by percevic, flixel-gdx (JAVA).
+
+## Examples
+
+There is a separate examples repo at https://github.com/IndrekV/MonoFlixel.Examples
 
 
 ## Setup (based on mac)
