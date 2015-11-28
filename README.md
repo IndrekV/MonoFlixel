@@ -32,7 +32,7 @@ This project is based on multiple different Flixel projects: Flixel, flxSharp by
 
 ## Examples
 
-There is a separate examples repo at [MonoFlixel](https://github.com/IndrekV/MonoFlixel.Examples)
+There is a separate examples repo at [MonoFlixel.Examples](https://github.com/IndrekV/MonoFlixel.Examples)
 
 
 ## Setup (based on mac)
